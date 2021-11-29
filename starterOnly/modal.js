@@ -1,23 +1,15 @@
-function editNav() {
-  var x = document.getElementById("myTopnav");
-  if (x.className === "topnav") {
-    x.className += " responsive";
-  } else {
-    x.className = "topnav";
-  }
+
+/********************** apparition / disparition modal **********************/
+/*référence div englobante formulaire, function display none / block*/
+function launchModal(){
+  document.querySelector('.displayModal').style.display = "block";
 }
-
-// DOM Elements
-const modalbg = document.querySelector(".bground");
-const modalBtn = document.querySelectorAll(".modal-btn");
-const formData = document.querySelectorAll(".formData");
-
-// launch modal event
-modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
-
-// launch modal form
-function launchModal() {
-  modalbg.style.display = "block";
+function closeModal(){
+  document.querySelector('.displayModal').style.display = "none";
 }
+/* event clic sur bouton inscription fait apparaitre modal */
+document.querySelector('.btn-signup').addEventListener('click', launchModal);
+/* event clic sur croix fait disparaitre modal*/
+document.querySelector('.close').addEventListener('click', closeModal);
 
-
+/* test regex */
