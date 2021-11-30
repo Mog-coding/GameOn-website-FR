@@ -528,7 +528,6 @@ footer {
 }
 
 /* ANIMATION */
-
 @keyframes modalopen {
   from {
     opacity: 0;
@@ -539,7 +538,9 @@ footer {
   }
 }
 
-/* INPUT */
+/******* Ajouts *******/
+/* INPUT 
 input:invalid {
   border: 2px dashed red;
 }
+*/
