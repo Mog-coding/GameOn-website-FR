@@ -25,19 +25,25 @@ function launchModal(){
 function closeModal(){
   document.querySelector('.displayModal').style.display = "none";
 }
-/* Vérifie noeudEcoute. true si nombre de caractères compris entre 2 et 30: efface message noeudTexte. false: envoie message d'erreur dans noeudTexte*/
-function checkCharacters(noeudEcoute, noeudTexte, nameStatus){
+
+/* Test noeudEcoute avec function checkCharacters, si true: efface message d'erreur noeud texte, si false: ajoute message d'erreur noeud texte  */
+function errorMessage(noeudEcoute, noeudTexte, nameStatus){
   noeudEcoute.addEventListener('change', function(event){
-    let inputData = event.target.value;
-    if ( inputData.length > 1 && inputData.length < 31  ){
+    if (checkCharacters(event.target.value, nameStatus)){
      document.querySelector(noeudTexte).textContent = "";
-     return nameStatus = true;
-     }else{
+    }else{
        document.querySelector(noeudTexte).textContent = "Veuillez entrer dans le champ Nom entre 2 et 30 caractères.";
-       return nameStatus = false;
+        }
+      }
+  );
+}
+/* test nombre caractères: true si nombre de caractères compris entre 2 et 30, sinon false */
+function checkCharacters(inputData, nameStatus){
+  if ( inputData.length > 1 && inputData.length < 31  ){
+     return nameStatus = true;
+    }else{
+      return nameStatus = false;
      }
-    }
- );
 }
 
 /********************** MAIN **********************/
@@ -49,8 +55,13 @@ document.querySelector('.close').addEventListener('click', closeModal);
 
 /************ test input Prénom et Nom ************/
 lastName.maxlength = 30; /* ? */
-checkCharacters(firstName, '#errFirstName', firstNameStatus);
-checkCharacters(lastName, '#errLastName', lastNameStatus);
+errorMessage(firstName, '#errFirstName', firstNameStatus);
+errorMessage(lastName, '#errLastName', lastNameStatus);
+
+/************ test input mail ************/
+
+
+
 
 /************ test input radios ************/
 /* event click pour chaque noeud du tableau radios, si au moins une radio est cliquée: radioStatus = true */
@@ -80,7 +91,7 @@ document.querySelector(".btn-submit").addEventListener('click', function(){
   if( checkboxStatus === false ){
     errorCheckbox.textContent = "Vous devez accepter les conditions générales pour continuer.";
   }
-  if( checkboxStatus && radioStatus === true ){  
+  if( checkboxStatus && radioStatus ){  
     document.querySelector('[name="registration"]').submit();
  }
 });
