@@ -17,7 +17,7 @@ errorLastName.classList.add('errorMessage');
 errorCheckbox.classList.add('errorMessage');
 errorRadios.classList.add('errorMessage');
 
-/********************** déclaration function **********************/
+/********************** déclaration functions **********************/
 /* ouverture fermeture modal: référence div form: display none / block */
 function launchModal(){
   document.querySelector('.displayModal').style.display = "block";
@@ -26,54 +26,31 @@ function closeModal(){
   document.querySelector('.displayModal').style.display = "none";
 }
 /* Vérifie noeudEcoute. true si nombre de caractères compris entre 2 et 30: efface message noeudTexte. false: envoie message d'erreur dans noeudTexte*/
-/*
-function checkCaracters(noeudEcoute, noeudTexte){
+function checkCharacters(noeudEcoute, noeudTexte, nameStatus){
   noeudEcoute.addEventListener('change', function(event){
     let inputData = event.target.value;
     if ( inputData.length > 1 && inputData.length < 31  ){
      document.querySelector(noeudTexte).textContent = "";
-     return lastNameStatus = true;
+     return nameStatus = true;
      }else{
        document.querySelector(noeudTexte).textContent = "Veuillez entrer dans le champ Nom entre 2 et 30 caractères.";
-       return lastNameStatus = false;
+       return nameStatus = false;
      }
     }
  );
 }
-checkCaracters('lastName', '#errLastName');
-checkCaracters('firstName', '#errFirstName');
-*/
 
 /********************** MAIN **********************/
+
 /* event clic sur bouton inscription fait apparaitre modal */
 document.querySelector('.btn-signup').addEventListener('click', launchModal);
 /* event clic sur croix fait disparaitre modal*/
 document.querySelector('.close').addEventListener('click', closeModal);
 
-/************ test input Nom et Prénoms ************/
+/************ test input Prénom et Nom ************/
 lastName.maxlength = 30; /* ? */
-lastName.addEventListener('change', function(event){
-  let inputData = event.target.value;
-  if ( inputData.length > 1 && inputData.length < 31  ){
-   document.querySelector('#errLastName').textContent = "";
-   return lastNameStatus = true;
-   }else{
-     document.querySelector('#errLastName').textContent = "Veuillez entrer dans le champ Nom entre 2 et 30 caractères.";
-     return lastNameStatus = false;
-   }
-  }
-);
-firstName.addEventListener('change', function(event){
- let firstNameData = event.target.value;
- if ( firstNameData.length > 1 && firstNameData.length < 31  ){
-  document.querySelector('#errFirstName').textContent = "";
-  return firstNameStatus = true;
-  }else{
-    document.querySelector('#errFirstName').textContent = "Veuillez entrer dans le champ Nom entre 2 et 30 caractères.";
-    return firstNameStatus = false;
-  }
- }
-);
+checkCharacters(firstName, '#errFirstName', firstNameStatus);
+checkCharacters(lastName, '#errLastName', lastNameStatus);
 
 /************ test input radios ************/
 /* event click pour chaque noeud du tableau radios, si au moins une radio est cliquée: radioStatus = true */
