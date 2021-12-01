@@ -3,12 +3,13 @@ let lastNameStatus = false;
 let firstNameStatus = false;
 let radioStatus = false; 
 let checkboxStatus = true;
-let lastName = document.querySelector('#last');
-let firstName = document.querySelector('#first');
+let lastName = document.querySelector('#last'); //noeud input prénom
+let firstName = document.querySelector('#first'); //noeud input nom
 let errorFirstName = document.querySelector('#errFirstName');
 let errorLastName = document.querySelector('#errLastName');
 let errorCheckbox = document.querySelector('#errCheckbox');
 let errorRadios = document.querySelector('#errRadios');
+let regex = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\"\(\[\]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])"); //regex validation mail RFC5322 format
 const arrayRadio = [document.querySelector('#location1'), document.querySelector('#location2'), document.querySelector('#location3'), document.querySelector('#location4'), document.querySelector('#location5'), document.querySelector('#location6')]; //référence des 6 noeuds input radio 
 
 /********************** ajout de class css **********************/
@@ -59,9 +60,14 @@ errorMessage(firstName, '#errFirstName', firstNameStatus);
 errorMessage(lastName, '#errLastName', lastNameStatus);
 
 /************ test input mail ************/
+let email = document.querySelector('#email');
 
-
-
+function testEmail(mail){
+	console.log(regex.test(mail.target.value));
+  console.log(mail.target.value);
+  console.log(regex);
+  
+email.addEventListener('change', testEmail);
 
 /************ test input radios ************/
 /* event click pour chaque noeud du tableau radios, si au moins une radio est cliquée: radioStatus = true */
