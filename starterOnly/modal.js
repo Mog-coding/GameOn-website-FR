@@ -1,72 +1,58 @@
 /********************** déclaration variables **********************/
-let lastNameStatus = false;
-let firstNameStatus = false;
 let radioStatus = false; 
 let checkboxStatus = true;
-let lastName = document.querySelector('#last'); //noeud input prénom
-let firstName = document.querySelector('#first'); //noeud input nom
-let errorFirstName = document.querySelector('#errFirstName');
-let errorLastName = document.querySelector('#errLastName');
-let errorCheckbox = document.querySelector('#errCheckbox');
-let errorRadios = document.querySelector('#errRadios');
-let regex = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\"\(\[\]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])"); //regex validation mail RFC5322 format
-const arrayRadio = [document.querySelector('#location1'), document.querySelector('#location2'), document.querySelector('#location3'), document.querySelector('#location4'), document.querySelector('#location5'), document.querySelector('#location6')]; //référence des 6 noeuds input radio 
+const errorCheckbox = document.querySelector('#errCheckbox');
+const errorRadios = document.querySelector('#errRadios');
+const arrayRadio = document.querySelectorAll('[name="location"]'); //référence des 6 noeuds input radio 
 
-/********************** ajout de class css **********************/
-errorFirstName.classList.add('errorMessage');
-errorLastName.classList.add('errorMessage');
-errorCheckbox.classList.add('errorMessage');
-errorRadios.classList.add('errorMessage');
+/********************** OUVERTURE FERMETURE MODAL **********************/
+/* référence div form: display none / block */
+function switchModal(truefalse){
+  document.querySelector('.displayModal').style.display = result(truefalse)};
+/*  open ? "block" : "none"; */
+function result(truefalse){ /* = if problème */
+  if (truefalse){
+    return "block"
+  }else{
+    return "none"
+  };
+};
+/* clic sur bouton inscription fait apparaitre modal */
+document.querySelector('.btn-signup').addEventListener('click', function(){
+  switchModal(true);
+});
+/* clic sur croix fait disparaitre modal */
+document.querySelector('.close').addEventListener('click', function(){
+  switchModal(false);
+});
 
-/********************** déclaration functions **********************/
-/* ouverture fermeture modal: référence div form: display none / block */
-function launchModal(){
-  document.querySelector('.displayModal').style.display = "block";
+/********************** TEST NOM **********************/
+const lastName = document.querySelector('#last'); 
+const firstName = document.querySelector('#first'); 
+function checkLastName(event) {
+  if (/^[a-zA-Z]{2,30}$/.test(event.target.value)) { 
+    event.target.parentElement.removeAttribute("data-error-visible");
+    event.target.parentElement.removeAttribute("data-error");
+  } else {
+    event.target.parentElement.setAttribute("data-error-visible", true);
+    event.target.parentElement.setAttribute("data-error", "erreur nom");
+  }
 }
-function closeModal(){
-  document.querySelector('.displayModal').style.display = "none";
-}
-
-/* Test noeudEcoute avec function checkCharacters, si true: efface message d'erreur noeud texte, si false: ajoute message d'erreur noeud texte  */
-function errorMessage(noeudEcoute, noeudTexte, nameStatus){
-  noeudEcoute.addEventListener('change', function(event){
-    if (checkCharacters(event.target.value, nameStatus)){
-     document.querySelector(noeudTexte).textContent = "";
-    }else{
-       document.querySelector(noeudTexte).textContent = "Veuillez entrer dans le champ Nom entre 2 et 30 caractères.";
-        }
-      }
-  );
-}
-/* test nombre caractères: true si nombre de caractères compris entre 2 et 30, sinon false */
-function checkCharacters(inputData, nameStatus){
-  if ( inputData.length > 1 && inputData.length < 31  ){
-     return nameStatus = true;
-    }else{
-      return nameStatus = false;
-     }
-}
-
-/********************** MAIN **********************/
-
-/* event clic sur bouton inscription fait apparaitre modal */
-document.querySelector('.btn-signup').addEventListener('click', launchModal);
-/* event clic sur croix fait disparaitre modal*/
-document.querySelector('.close').addEventListener('click', closeModal);
-
-/************ test input Prénom et Nom ************/
-lastName.maxlength = 30; /* ? */
-errorMessage(firstName, '#errFirstName', firstNameStatus);
-errorMessage(lastName, '#errLastName', lastNameStatus);
+lastName.addEventListener('change', checkLastName);
 
 /************ test input mail ************/
+const regexMail = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\"\(\[\]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])"); //regex validation mail RFC5322 format
 let email = document.querySelector('#email');
 
 function testEmail(mail){
-	console.log(regex.test(mail.target.value));
-  console.log(mail.target.value);
-  console.log(regex);
-  
+if(regexMail.test(mail.target.value)){
+  mail.target.parentElement.removeAttribute("data-error-visible");
+  mail.target.parentElement.removeAttribute("data-error");
+}else{
+  mail.target.parentElement.setAttribute("data-error-visible", true);
+  mail.target.parentElement.setAttribute("data-error", "erreur nom");
+}
+}
 email.addEventListener('change', testEmail);
 
 /************ test input radios ************/
@@ -97,8 +83,11 @@ document.querySelector(".btn-submit").addEventListener('click', function(){
   if( checkboxStatus === false ){
     errorCheckbox.textContent = "Vous devez accepter les conditions générales pour continuer.";
   }
+ });
+
+ /*
   if( checkboxStatus && radioStatus ){  
     document.querySelector('[name="registration"]').submit();
+    console.log("submit");
  }
-});
-
+ */
