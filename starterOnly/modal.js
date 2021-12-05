@@ -4,14 +4,14 @@ function switchModal(truefalse) {
   document.querySelector('.bground').style.display = blockNone(truefalse); /* = if problème */
 };
 /* Converti true en block et false en none */
-function blockNone(truefalse) { 
+function blockNone(truefalse) {
   if (truefalse) {  //open ? "block" : "none";
     return "block"
   } else {
     return "none"
   };
 };
-/* Clic sur bouton inscription fait apparaitre/disparaitre le modal */
+/* Clic sur bouton aiption fait apparaitre/disparaitre le modal */
 document.querySelector('.btn-signup').addEventListener('click', function () {
   switchModal(true);
 });
@@ -41,27 +41,26 @@ function checkFirstLastName(event) {
 lastName.addEventListener('change', checkFirstLastName);
 firstName.addEventListener('change', checkFirstLastName);
 
-
-
-
-
 /************ test input mail ************/
 const regexMail = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\"\(\[\]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])"); //regex validation mail RFC5322 format
-let email = document.querySelector('#email');
+const regexDate = new RegExp("^(19|20)\\d\\d[/-](0[1-9]|1[012])[/-](0[1-9]|[12][0-9]|3[01])$");
+const regexTournoi = new RegExp("^(0|[0-9][0-9])$");
+const email = document.querySelector('#email');
+const birth = document.querySelector('#birthdate');
+const tournoi = document.querySelector('#quantity');
 
-function testEmail(mail) {
-  if (regexMail.test(mail.target.value)) {
-    mail.target.parentElement.removeAttribute("data-error-visible");
-    mail.target.parentElement.removeAttribute("data-error");
+function testInput(noeud, regex3) {
+  if (regex3.test(noeud.value)) {
+    noeud.parentElement.removeAttribute("data-error-visible");
+    noeud.parentElement.removeAttribute("data-error");
   } else {
-    mail.target.parentElement.setAttribute("data-error-visible", true);
-    mail.target.parentElement.setAttribute("data-error", "erreur nom");
+    noeud.parentElement.setAttribute("data-error-visible", true);
+    noeud.parentElement.setAttribute("data-error", "erreur email, birth, tournoi");
   }
 }
-email.addEventListener('change', testEmail);
-
-/************ date de naissance ************/
-const regexDate = new RegExp("^(19|20)\\d\\d[/](0[1-9]|1[012])[/](0[1-9]|[12][0-9]|3[01])$");
+testInput(email, regexMail); 
+testInput(birth, regexDate); 
+testInput(tournoi, regexTournoi); 
 
 /************ test input radios ************/
 /********************** déclaration variables **********************/

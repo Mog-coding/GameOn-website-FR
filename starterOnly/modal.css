@@ -121,7 +121,7 @@ main {
   font-size: 16px;
 }
 
-.displayModal {
+.bground {
   display: none;
   position: fixed;
   z-index: 1;
