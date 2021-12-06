@@ -11,7 +11,7 @@ function blockNone(truefalse) {
     return "none"
   };
 };
-/* Clic sur bouton aiption fait apparaitre/disparaitre le modal */
+/* Clic sur bouton d'inscription fait apparaitre/disparaitre le modal */
 document.querySelector('.btn-signup').addEventListener('click', function () {
   switchModal(true);
 });
@@ -19,11 +19,13 @@ document.querySelector('.close').addEventListener('click', function () {
   switchModal(false);
 });
 
-/********************** TEST input NOM et PRENOM **********************/
+
+/********************** ECOUTE input NOM et PRENOM **********************/
 const firstName = document.querySelector('#first'); //noeud <input> Prénom
 const lastName = document.querySelector('#last'); //noeud <input> Nom
+const regexFirstLast = new RegExp("^[a-zA-Z]{2,30}$");
 
-/* Vérifie que la donnée input match avec la regex si non: ajoute attributs erreur: style erreur et message d'erreur, si oui: supprime les attributs erreur */
+/* Test si la donnée input match avec la regex suite à un événement change,si non: ajoute attributs erreur: style erreur et message d'erreur, si oui: supprime les attributs erreur */
 function checkFirstLastName(event) {
   if (/^[a-zA-Z]{2,30}$/.test(event.target.value)) {
     event.target.parentElement.removeAttribute("data-error-visible");
@@ -37,70 +39,91 @@ function checkFirstLastName(event) {
     }
   }
 }
-/* vérification <input> Prénom et Nom */
+/* Ecoute <input> Prénom et Nom */
 lastName.addEventListener('change', checkFirstLastName);
 firstName.addEventListener('change', checkFirstLastName);
 
-/************ test input mail ************/
+
+/********************** TEST input EMAIL BIRTH DATE TOURNOI **********************/
 const regexMail = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\"\(\[\]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])"); //regex validation mail RFC5322 format
 const regexDate = new RegExp("^(19|20)\\d\\d[/-](0[1-9]|1[012])[/-](0[1-9]|[12][0-9]|3[01])$");
 const regexTournoi = new RegExp("^(0|[0-9][0-9])$");
-const email = document.querySelector('#email');
-const birth = document.querySelector('#birthdate');
-const tournoi = document.querySelector('#quantity');
+const email = document.querySelector('#email'); //noeud input Email
+const birthDate = document.querySelector('#birthdate'); //noeud input date de naissance
+const nbTournoi = document.querySelector('#quantity'); //noeud input nombre de tournois
+const errorMessage = ["erreur syntaxe email", "erreur date de naissance", "erreur nombre tournois", "sélectionner au moins une radio", "Veuillez accepter les conditions générales pour continuer"];  //Message d'erreur d'email, date de naissance, nombre tournoi, radio, checkbox
 
-function testInput(noeud, regex3) {
-  if (regex3.test(noeud.value)) {
+/* Test si la donnée input match avec la regex si non: ajoute attributs erreur: style erreur et message d'erreur, si oui: supprime les attributs erreur */
+function messageInput(noeud, regex, errorMessage) {
+  if (regex.test(noeud.value)) {
     noeud.parentElement.removeAttribute("data-error-visible");
     noeud.parentElement.removeAttribute("data-error");
   } else {
     noeud.parentElement.setAttribute("data-error-visible", true);
-    noeud.parentElement.setAttribute("data-error", "erreur email, birth, tournoi");
+    noeud.parentElement.setAttribute("data-error", errorMessage);
   }
 }
-testInput(email, regexMail); 
-testInput(birth, regexDate); 
-testInput(tournoi, regexTournoi); 
 
-/************ test input radios ************/
-/********************** déclaration variables **********************/
-let radioStatus = false;
-let checkboxStatus = true;
-const errorCheckbox = document.querySelector('#errCheckbox');
-const errorRadios = document.querySelector('#errRadios');
+
+/********************** TEST input RADIO et CHECKBOX **********************/
 const arrayRadio = document.querySelectorAll('[name="location"]'); //référence des 6 noeuds input radio
-/* event click pour chaque noeud du tableau radios, si au moins une radio est cliquée: radioStatus = true */
-arrayRadio.forEach(function (z) {
-  z.addEventListener('click', function () {
-    radioStatus = true;
-    errorRadios.textContent = "";
-  })
-});
-
-/************ test checkbox1 ************/
-/* référence noeud checbox1 si event click: changement boolean */
-document.querySelector('#checkbox1').addEventListener("click", function () {
-  if (checkboxStatus === false) {
-    checkboxStatus = true;
-    document.querySelector('#errCheckbox').textContent = "";
-  } else {
-    checkboxStatus = false;
+const noeudRadio = document.querySelector("#location1");
+const noeudCheckbox = document.querySelector('#checkbox1');
+/* si une radio est cochée, retourne true, sinon retoune false */
+function testRadio() {
+  let radioResult = false;
+  let radioValue = [];
+  for (let i = 0; i < arrayRadio.length; i++) {
+    if (arrayRadio[i].checked) {
+      radioValue.push = arrayRadio[i].value;
+      radioResult = true;
+    }
   }
-});
-
-/************ submit: validation du formulaire ************/
-document.querySelector(".btn-submit").addEventListener('click', function () {
-  if (radioStatus === false) {
-    errorRadios.textContent = "Vous devez choisir au moins une option pour continuer.";
-  }
-  if (checkboxStatus === false) {
-    errorCheckbox.textContent = "Vous devez accepter les conditions générales pour continuer.";
-  }
-});
-
-/*
- if( checkboxStatus && radioStatus ){
-   document.querySelector('[name="registration"]').submit();
-   console.log("submit");
+  return radioResult;
 }
-*/
+/* si checkbox1 est cochée, retourne true, sinon retoune false */
+function testCheckbox() {
+  let result = false;
+  if (noeudCheckbox.checked) {
+    result = true;
+  }
+  return result;
+}
+/* test radio et checkbox1, si false: ajoute attributs erreur: style erreur et message d'erreur, si true: supprime les attributs erreur  */
+function messageRadioCheck(fonction, noeud, message) {
+  if (fonction) {
+    noeud.parentElement.removeAttribute("data-error-visible");
+    noeud.parentElement.removeAttribute("data-error");
+  } else {
+    noeud.parentElement.setAttribute("data-error-visible", true);
+    noeud.parentElement.setAttribute("data-error", message);
+  }
+}
+messageRadioCheck(testRadio(), noeudRadio, errorMessage[3]);
+messageRadioCheck(testCheckbox(), noeudCheckbox, errorMessage[4]);
+
+
+/********************** Test valeur noeud avec regex **********************/
+/* test un noeud et une regex, si match, renvoie true, sinon false */
+function noeudRegex (regex, noeud ){
+  regex.test(noeud.value)
+};
+
+
+/********************** VALIDATION FORMULAIRE *********************
+document.querySelector(".btn-submit").addEventListener('click', function () {
+  /* test de saisie email, date de naissance et nombre de tournois 
+  messageInput(email, regexMail, errorMessage[0]);
+  messageInput(birthDate, regexDate, errorMessage[1]);
+  messageInput(nbTournoi, regexTournoi, errorMessage[2]);
+  /* test de radio et checkbox 
+  messageRadioCheck(testRadio(), noeudRadio, errorMessage[3]);
+  messageRadioCheck(testCheckbox(), noeudCheckbox, errorMessage[4]);
+
+
+  if (testRadio() && testCheckbox() && ) {
+    document.querySelector('[name="registration"]').submit();
+    console.log("submit");
+  });
+
+  **/

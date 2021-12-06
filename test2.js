@@ -7,7 +7,7 @@ console.log(regexSimp.test("100"));
 
 /* /^[a-zA-Z\-éëàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇÆæœ]{2,}$/ */
 
-
+/* version antérieure date naissance et tournoi */
 function testBirth() {
     if (regexDate.test(birth.value)) {
       birth.parentElement.removeAttribute("data-error-visible");
@@ -27,3 +27,43 @@ function testBirth() {
     }
   }
   testTournoi(); 
+
+  /* version antérieure radio et checkbox */
+  function radioMess() {
+    if (testRadio()) {
+      noeudRadio.parentElement.removeAttribute("data-error-visible");
+      noeudRadio.parentElement.removeAttribute("data-error");
+    } else {
+      noeudRadio.parentElement.setAttribute("data-error-visible", true);
+      noeudRadio.parentElement.setAttribute("data-error", "Cocher au moins une case");
+    }
+  }
+  
+ const noeudCheckbox = document.querySelector('#checkbox1');
+  function testCheckbox(){
+    let result = false;
+    if (noeudCheckbox.checked){
+      result = true;
+    }
+    return result;
+  }
+  
+  function messCheckbox() {
+    if (testCheckbox()) {
+      noeudCheckbox.parentElement.removeAttribute("data-error-visible");
+      noeudCheckbox.parentElement.removeAttribute("data-error");
+    } else {
+      noeudCheckbox.parentElement.setAttribute("data-error-visible", true);
+      noeudCheckbox.parentElement.setAttribute("data-error", "Valider les conditions générales");
+    }
+  }
+  
+  function radioMess() {
+    if (testRadio()) {
+      noeudRadio.parentElement.removeAttribute("data-error-visible");
+      noeudRadio.parentElement.removeAttribute("data-error");
+    } else {
+      noeudRadio.parentElement.setAttribute("data-error-visible", true);
+      noeudRadio.parentElement.setAttribute("data-error", "Cocher au moins une case");
+    }
+  }
