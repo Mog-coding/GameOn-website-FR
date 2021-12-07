@@ -67,3 +67,26 @@ function testBirth() {
       noeudRadio.parentElement.setAttribute("data-error", "Cocher au moins une case");
     }
   }
+
+  /* version antérieure validation form */
+  /* event click sur bouton inscription */
+  document.querySelector(".btn-submit").addEventListener('click', function (event) {
+    event.preventDefault(); //empêche la page de se rafraichir suite à un appui sur bouton submit ET un formulaire non valide
+    /* affiche messages d'erreur si saisie firstName, lastName, email, date de naissance, nombre de tournois non conforme */ 
+    messageInput(firstName, regexFirstLast, errorMessage[0]);
+    messageInput(lastName, regexFirstLast, errorMessage[1]);
+    messageInput(email, regexMail, errorMessage[2]);
+    messageInput(birthDate, regexDate, errorMessage[3]);
+    messageInput(nbTournoi, regexTournoi, errorMessage[4]);
+    /* affiche message d'erreur si coche radio et checkbox non conforme */
+    messageRadioCheck(testRadio(), noeudRadio, errorMessage[5]);
+    messageRadioCheck(testCheckbox(), noeudCheckbox, errorMessage[6]);
+  
+    if (noeudRegex(regexFirstLast, firstName) && noeudRegex(regexFirstLast, lastName) && noeudRegex(regexMail, email) && noeudRegex(regexDate, birthDate) && noeudRegex(regexTournoi, nbTournoi) && testRadio() && testCheckbox()) {
+      document.querySelector('[name="reserve"]').onsubmit = function()
+      { console.log("SEEEENND");
+        alert('send');
+      };
+    } 
+  } 
+  );

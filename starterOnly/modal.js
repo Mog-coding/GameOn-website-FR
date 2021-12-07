@@ -27,15 +27,15 @@ const regexFirstLast = new RegExp("^[a-zA-Z]{2,30}$");
 
 /* Test si la donnée input match avec la regex suite à un événement change,si non: ajoute attributs erreur: style erreur et message d'erreur, si oui: supprime les attributs erreur */
 function checkFirstLastName(event) {
-  if (/^[a-zA-Z]{2,30}$/.test(event.target.value)) {
+  if (regexFirstLast.test(event.target.value)) {
     event.target.parentElement.removeAttribute("data-error-visible");
     event.target.parentElement.removeAttribute("data-error");
   } else {
     event.target.parentElement.setAttribute("data-error-visible", true);
     if (event.target.id === "first") {
-      event.target.parentElement.setAttribute("data-error", "Veuillez entrer entre 2 et 30 caractères dans le champ Prénom.");
+      event.target.parentElement.setAttribute("data-error", errorMessage[0]);
     } else {
-      event.target.parentElement.setAttribute("data-error", "Veuillez entrer entre 2 et 30 caractères dans le champ Nom.");
+      event.target.parentElement.setAttribute("data-error", errorMessage[1]);
     }
   }
 }
@@ -47,11 +47,11 @@ firstName.addEventListener('change', checkFirstLastName);
 /********************** TEST input EMAIL BIRTH DATE TOURNOI **********************/
 const regexMail = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\"\(\[\]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])"); //regex validation mail RFC5322 format
 const regexDate = new RegExp("^(19|20)\\d\\d[/-](0[1-9]|1[012])[/-](0[1-9]|[12][0-9]|3[01])$");
-const regexTournoi = new RegExp("^(0|[0-9][0-9])$");
+const regexTournoi = new RegExp("^([0-9]|[0-9][0-9])$");
 const email = document.querySelector('#email'); //noeud input Email
 const birthDate = document.querySelector('#birthdate'); //noeud input date de naissance
 const nbTournoi = document.querySelector('#quantity'); //noeud input nombre de tournois
-const errorMessage = ["erreur syntaxe email", "erreur date de naissance", "erreur nombre tournois", "sélectionner au moins une radio", "Veuillez accepter les conditions générales pour continuer"];  //Message d'erreur d'email, date de naissance, nombre tournoi, radio, checkbox
+const errorMessage = ["Veuillez entrer entre 2 et 30 caractères dans le champ Prénom.", "Veuillez entrer entre 2 et 30 caractères dans le champ Nom.", "erreur syntaxe email", "erreur date de naissance", "erreur nombre tournois", "sélectionner au moins une radio", "Veuillez accepter les conditions générales pour continuer"];  //Message d'erreur d'email, date de naissance, nombre tournoi, radio, checkbox
 
 /* Test si la donnée input match avec la regex si non: ajoute attributs erreur: style erreur et message d'erreur, si oui: supprime les attributs erreur */
 function messageInput(noeud, regex, errorMessage) {
@@ -99,31 +99,40 @@ function messageRadioCheck(fonction, noeud, message) {
     noeud.parentElement.setAttribute("data-error", message);
   }
 }
-messageRadioCheck(testRadio(), noeudRadio, errorMessage[3]);
-messageRadioCheck(testCheckbox(), noeudCheckbox, errorMessage[4]);
 
 
-/********************** Test valeur noeud avec regex **********************/
-/* test un noeud et une regex, si match, renvoie true, sinon false */
-function noeudRegex (regex, noeud ){
-  regex.test(noeud.value)
+/********************** VALIDATION FORMULAIRE ***********************/
+/* test la saisie d'un noeud et une regex, si match, renvoie true, sinon false */
+function noeudRegex(regex, noeud) {
+  return regex.test(noeud.value)
 };
+function testAllInput() {
+  if (noeudRegex(regexFirstLast, firstName) && noeudRegex(regexFirstLast, lastName) && noeudRegex(regexMail, email) && noeudRegex(regexDate, birthDate) && noeudRegex(regexTournoi, nbTournoi) && testRadio() && testCheckbox()) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
+/* event click sur bouton inscription */
+document.querySelector('[name="reserve"]').addEventListener('submit', function (event) {
+  /* affiche messages d'erreur si saisie firstName, lastName, email, date de naissance, nombre de tournois non conforme */
+  messageInput(firstName, regexFirstLast, errorMessage[0]);
+  messageInput(lastName, regexFirstLast, errorMessage[1]);
+  messageInput(email, regexMail, errorMessage[2]);
+  messageInput(birthDate, regexDate, errorMessage[3]);
+  messageInput(nbTournoi, regexTournoi, errorMessage[4]);
+  /* affiche message d'erreur si coche radio et checkbox non conforme */
+  messageRadioCheck(testRadio(), noeudRadio, errorMessage[5]);
+  messageRadioCheck(testCheckbox(), noeudCheckbox, errorMessage[6]);
 
-/********************** VALIDATION FORMULAIRE *********************
-document.querySelector(".btn-submit").addEventListener('click', function () {
-  /* test de saisie email, date de naissance et nombre de tournois 
-  messageInput(email, regexMail, errorMessage[0]);
-  messageInput(birthDate, regexDate, errorMessage[1]);
-  messageInput(nbTournoi, regexTournoi, errorMessage[2]);
-  /* test de radio et checkbox 
-  messageRadioCheck(testRadio(), noeudRadio, errorMessage[3]);
-  messageRadioCheck(testCheckbox(), noeudCheckbox, errorMessage[4]);
+  if (testAllInput()) {
+    alert('true');
+  } else {
+    alert('false');
+    event.preventDefault(); //empêche la page de se rafraichir suite à un appui sur bouton submit ET un formulaire non valide
+    return false;
+  }
+}
+);
 
-
-  if (testRadio() && testCheckbox() && ) {
-    document.querySelector('[name="registration"]').submit();
-    console.log("submit");
-  });
-
-  **/
