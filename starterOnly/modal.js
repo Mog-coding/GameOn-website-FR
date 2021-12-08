@@ -1,6 +1,7 @@
 /********************** OUVERTURE FERMETURE MODAL **********************/
 /* Passe le modal en display: block; ou none; */
 function switchModal(truefalse) {
+  document.querySelector(".close").style.display = "display"; //croix masquée suite appuie bouton submit
   document.querySelector('.bground').style.display = blockNone(truefalse); /* = if problème */
 };
 /* Converti true en block et false en none */
@@ -121,6 +122,7 @@ document.querySelector('[name="reserve"]').addEventListener('submit', function (
   /* test toutes les 7 input du formulaire */
   if (testAllInput()) {
      document.querySelector("#thankMessage").style.display = "block";
+     document.querySelector(".close").style.display = "none";
   } else {
     /* affiche messages d'erreur si saisie firstName, lastName, email, date de naissance, nombre de tournois, radio et checkbox non conforme */
     messageInput(firstName, regexFirstLast, errorMessage[0]);
@@ -134,9 +136,11 @@ document.querySelector('[name="reserve"]').addEventListener('submit', function (
   }
 }
 );
-/* bouton fermer thankMessage et modal */
+
+
+/********************** BOUTON FERMER ***********************/
 document.querySelector("#fermer").addEventListener('click', function (event) {
   event.preventDefault(); //supprime le comportement submit button de <form>
-  document.querySelector("#thankMessage").style.display = "none"; //Empêche le formulaire de se réouvrir sur le thank message
+  document.querySelector("#thankMessage").style.display = "none"; //Fait disparaitre le thank message
   switchModal(false); //ferme le modal
 });
