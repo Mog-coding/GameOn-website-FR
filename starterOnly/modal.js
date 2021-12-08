@@ -11,7 +11,7 @@ function blockNone(truefalse) {
     return "none"
   };
 };
-/* Clic sur bouton d'inscription fait apparaitre/disparaitre le modal */
+/* Clic les boutons d'inscription fait apparaitre/disparaitre le modal */
 document.querySelector('.btn-signup').addEventListener('click', function () {
   switchModal(true);
 });
@@ -106,6 +106,7 @@ function messageRadioCheck(fonction, noeud, message) {
 function noeudRegex(regex, noeud) {
   return regex.test(noeud.value)
 };
+/* test les 7 input du formulaire, renvoie true si correctement remplis, sinon false */
 function testAllInput() {
   if (noeudRegex(regexFirstLast, firstName) && noeudRegex(regexFirstLast, lastName) && noeudRegex(regexMail, email) && noeudRegex(regexDate, birthDate) && noeudRegex(regexTournoi, nbTournoi) && testRadio() && testCheckbox()) {
     return true;
@@ -114,25 +115,28 @@ function testAllInput() {
   }
 }
 
-/* event click sur bouton inscription */
+/* test les input et envoie le formulaire, si erreur: affiche les messages d'erreur et n'envoie pas le formulaire.  */
 document.querySelector('[name="reserve"]').addEventListener('submit', function (event) {
-  /* affiche messages d'erreur si saisie firstName, lastName, email, date de naissance, nombre de tournois non conforme */
-  messageInput(firstName, regexFirstLast, errorMessage[0]);
-  messageInput(lastName, regexFirstLast, errorMessage[1]);
-  messageInput(email, regexMail, errorMessage[2]);
-  messageInput(birthDate, regexDate, errorMessage[3]);
-  messageInput(nbTournoi, regexTournoi, errorMessage[4]);
-  /* affiche message d'erreur si coche radio et checkbox non conforme */
-  messageRadioCheck(testRadio(), noeudRadio, errorMessage[5]);
-  messageRadioCheck(testCheckbox(), noeudCheckbox, errorMessage[6]);
-
+  event.preventDefault(); //empêche l'envoi du formulaire suite à un appui sur bouton submit ET un formulaire non valide
+  /* test toutes les 7 input du formulaire */
   if (testAllInput()) {
-    alert('true');
+     document.querySelector("#thankMessage").style.display = "block";
   } else {
-    alert('false');
-    event.preventDefault(); //empêche la page de se rafraichir suite à un appui sur bouton submit ET un formulaire non valide
+    /* affiche messages d'erreur si saisie firstName, lastName, email, date de naissance, nombre de tournois, radio et checkbox non conforme */
+    messageInput(firstName, regexFirstLast, errorMessage[0]);
+    messageInput(lastName, regexFirstLast, errorMessage[1]);
+    messageInput(email, regexMail, errorMessage[2]);
+    messageInput(birthDate, regexDate, errorMessage[3]);
+    messageInput(nbTournoi, regexTournoi, errorMessage[4]);
+    messageRadioCheck(testRadio(), noeudRadio, errorMessage[5]);
+    messageRadioCheck(testCheckbox(), noeudCheckbox, errorMessage[6]);
     return false;
   }
 }
 );
-
+/* bouton fermer thankMessage et modal */
+document.querySelector("#fermer").addEventListener('click', function (event) {
+  event.preventDefault(); //supprime le comportement submit button de <form>
+  document.querySelector("#thankMessage").style.display = "none"; //Empêche le formulaire de se réouvrir sur le thank message
+  switchModal(false); //ferme le modal
+});
