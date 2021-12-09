@@ -4,7 +4,16 @@ function switchModal(truefalse) {
   document.querySelector(".close").style.display = "display"; //croix masquée suite appuie bouton submit
   document.querySelector('.bground').style.display = blockNone(truefalse); /* = if problème */
 };
-/* Converti true en block et false en none */
+
+/**
+ * @description Converti true en block et false en none
+ */
+
+/** + saut de ligne
+ * 
+ * @param {*} truefalse 
+ * @returns 
+ */
 function blockNone(truefalse) {
   if (truefalse) {  //open ? "block" : "none";
     return "block"
@@ -12,6 +21,7 @@ function blockNone(truefalse) {
     return "none"
   };
 };
+
 /* Clic les boutons d'inscription fait apparaitre/disparaitre le modal */
 document.querySelector('.btn-signup').addEventListener('click', function () {
   switchModal(true);
@@ -49,7 +59,8 @@ firstName.addEventListener('change', checkFirstLastName);
 const regexMail = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\"\(\[\]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])"); //regex validation mail RFC5322 format
 const regexDate = new RegExp("^(19|20)\\d\\d[/-](0[1-9]|1[012])[/-](0[1-9]|[12][0-9]|3[01])$");
 const regexTournoi = new RegExp("^([0-9]|[0-9][0-9])$");
-const email = document.querySelector('#email'); //noeud input Email
+//pas de com variable
+const email = document.querySelector('#email'); 
 const birthDate = document.querySelector('#birthdate'); //noeud input date de naissance
 const nbTournoi = document.querySelector('#quantity'); //noeud input nombre de tournois
 const errorMessage = ["Veuillez entrer entre 2 et 30 caractères dans le champ Prénom.", "Veuillez entrer entre 2 et 30 caractères dans le champ Nom.", "erreur syntaxe email", "erreur date de naissance", "erreur nombre tournois", "sélectionner au moins une radio", "Veuillez accepter les conditions générales pour continuer"];  //Message d'erreur d'email, date de naissance, nombre tournoi, radio, checkbox
@@ -115,14 +126,18 @@ function testAllInput() {
     return false;
   }
 }
-
-/* test les input et envoie le formulaire, si erreur: affiche les messages d'erreur et n'envoie pas le formulaire.  */
-document.querySelector('[name="reserve"]').addEventListener('submit', function (event) {
+function validate
+/* test les input et envoie le formulaire, si erreur: affiche les messages d'erreur et n'envoie pas le formulaire.  */      REFERENCE: logique function accessible partout
+document.querySelector('[name="reserve"]').addEventListener('submit', validate {
   event.preventDefault(); //empêche l'envoi du formulaire suite à un appui sur bouton submit ET un formulaire non valide
   /* test toutes les 7 input du formulaire */
   if (testAllInput()) {
+    /*
      document.querySelector("#thankMessage").style.display = "block";
      document.querySelector(".close").style.display = "none";
+     */
+     document.querySelector(".modal-body").removeChild(document.querySelector('[name="reserve"]'));
+     document.querySelector(".modal-body").addChild("bonjour");
   } else {
     /* affiche messages d'erreur si saisie firstName, lastName, email, date de naissance, nombre de tournois, radio et checkbox non conforme */
     messageInput(firstName, regexFirstLast, errorMessage[0]);
