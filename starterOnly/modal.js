@@ -107,7 +107,7 @@ function testCheckbox() {
   return result;
 }
 
-/* test la validité de toutes les inputs (appel les 3 fonctions au dessus), return array boolean*/
+/* test la validité de TOUTES les inputs (appel les 3 fonctions au dessus), return array boolean*/
 function testAllInput() {
   while(inputResult.length > 0) {
     inputResult.pop();
@@ -122,7 +122,10 @@ function testAllInput() {
 function isFalseInput(){
   return testAllInput().every( function(element){
     if(Boolean(element) === false){
-      return false}
+      return false;
+    }else{
+      return true;
+    }
   })
 }
 
@@ -139,3 +142,9 @@ document.querySelector('[name="reserve"]').addEventListener('submit', function (
 }
 );
 
+  /********************** BOUTON FERMER ***********************/
+  document.querySelector("#fermer").addEventListener('click', function (event) {
+    event.preventDefault(); //supprime le comportement submit button de <form>
+    document.querySelector("#thankMessage").style.display = "none"; //Fait disparaitre le thank message
+    switchModal(false); //ferme le modal
+  });

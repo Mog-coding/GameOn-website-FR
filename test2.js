@@ -1,4 +1,16 @@
-let regex1 = /^(19|20)\d\d[/-](0[1-9]|1[012])[/-](0[1-9]|[12][0-9]|3[01])$/;
-let noeud = "2021-12-18";
+function testAllInput() {
+    return [false, true, true]
+}
 
-console.log(noeud.match(regex1));
+function isFalseInput() {
+    return testAllInput().every(function (element) {
+        if (Boolean(element) === false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    )
+}
+
+console.log(isFalseInput());
