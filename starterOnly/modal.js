@@ -22,72 +22,120 @@ document.querySelector('.close').addEventListener('click', function () {
 /********************** INPUT **********************/
 const arrayRadio = document.querySelectorAll('[name="location"]'); //référence des 6 noeuds input radio
 const inputProperties = ['firstName', 'lastName', 'email', 'birthDate', 'nbTournoi', 'radio', 'checkbox',];
+let inputResult = [];
 
+/* déclaration des objets */
 const dataInput = {
   firstName: {
     noeud: document.querySelector('#first'),
     errorMessage: "Veuillez entrer entre 2 et 30 caractères dans le champ Prénom.",
     regex: /^[a-zA-Z]{2,30}$/,
-    isValid: false,
   },
   lastName: {
     noeud: document.querySelector('#last'),
     errorMessage: "Veuillez entrer entre 2 et 30 caractères dans le champ Nom.",
     regex: /^[a-zA-Z]{2,30}$/,
-    isValid: true,
   },
   email: {
     noeud: document.querySelector('#email'),
     errorMessage: "erreur syntaxe email",
-    regex: /^[a-zA-Z]{2,30}$/,
+    regex: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
     //regex validation mail RFC5322 format
-    isValid: false,
   },
   birthDate: {
     noeud: document.querySelector('#birthdate'),
     errorMessage: "erreur date de naissance",
-    regex: /^(19|20)\\d\\d[/-](0[1-9]|1[012])[/-](0[1-9]|[12][0-9]|3[01])$/,
-    isValid: true,
+    regex: /^(19|20)\d\d[/-](0[1-9]|1[012])[/-](0[1-9]|[12][0-9]|3[01])$/,
   },
   nbTournoi: {
     noeud: document.querySelector('#quantity'),
     errorMessage: "erreur nombre tournois",
     regex: /^([0-9]|[0-9][0-9])$/,
-    isValid: false,
   },
-  radio: {
+  radio: { 
     noeud: document.querySelector('#location1'),
     errorMessage: "Veuillez sélectionner une ville",
     regex: "",
-    isValid: false,
   },
   checkbox: {
     noeud: document.querySelector('#checkbox1'),
     errorMessage: "Veuillez accepter les conditions générales pour continuer",
     regex: "",
-    isValid: false,
   },
 }
 
-/* toute les input isValid dans un tableau Boolean */
-function isInputValid(objet) {
-  let arrayInputValid = [];
-  for (const property in objet) {
-        arrayInputValid.push(objet[property]["isValid"]);
+/* affichage/retrait message erreur en fonction d'un tableau avec validité des entrées */
+function displayErrorMessage(isInputValid) {
+  for (let i = 0; i < isInputValid.length; i++) {
+    if (Boolean(isInputValid[i]) === false) {
+      dataInput[inputProperties[i]]["noeud"].parentElement.setAttribute("data-error-visible", true);
+      dataInput[inputProperties[i]]["noeud"].parentElement.setAttribute("data-error", dataInput[inputProperties[i]]["errorMessage"]);
+    } else {
+      dataInput[inputProperties[i]]["noeud"].parentElement.removeAttribute("data-error-visible");
+      dataInput[inputProperties[i]]["noeud"].parentElement.removeAttribute("data-error");
+    }
   }
-console.log(arrayInputValid);
-return arrayInputValid;
 }
 
-/* affichage/retrait message erreur en fonction de isValid */
-function displayErrorMessage(array) {
-  for (let i = 0; i < array.length; i++) {
-    if(array[i] === false){
-    dataInput[inputProperties[i]]["noeud"].parentElement.setAttribute("data-error-visible", true);
-    dataInput[inputProperties[i]]["noeud"].parentElement.setAttribute("data-error", dataInput[inputProperties[i]]["errorMessage"]);
-  }else{
-    dataInput[inputProperties[i]]["noeud"].parentElement.removeAttribute("data-error-visible");
-    dataInput[inputProperties[i]]["noeud"].parentElement.removeAttribute("data-error");
+/*********** test de validité des 7 entrées ************/
+/* test les regex des 5 premieres input */
+function validRegex(inputResult) {
+  for ( let i = 0; i < 5; i++ ){
+  let result = dataInput[inputProperties[i]]["noeud"].value.match(dataInput[inputProperties[i]]["regex"]);
+  inputResult.push(result);
+  }
+ return inputResult;
+};
+
+/* test la validité d'input 6 radio */
+function testRadio() {
+  let radioResult = false;
+  for (let i = 0; i < arrayRadio.length; i++) {
+    if (arrayRadio[i].checked) {
+      radioResult = true;
+    }
+  }
+  return radioResult;
+}
+
+/* test la validité d'input 7 checkbox*/
+function testCheckbox() {
+  let result = false;
+  if (dataInput.checkbox.noeud.checked) {
+    result = true;
+  }
+  return result;
+}
+
+/* test la validité de toutes les inputs (appel les 3 fonctions au dessus), return array boolean*/
+function testAllInput() {
+  while(inputResult.length > 0) {
+    inputResult.pop();
+  };
+  validRegex(inputResult);
+  inputResult.push(testRadio(), testCheckbox());
+  console.log(inputResult);
+  return inputResult;
+}
+
+/* si une input === false, return false */
+function isFalseInput(){
+  return testAllInput().every( function(element){
+    if(Boolean(element) === false){
+      return false}
+  })
+}
+
+/******** Appui bouton submit ******/
+document.querySelector('[name="reserve"]').addEventListener('submit', function (event) {
+  event.preventDefault();
+  /* test toutes les 7 input du formulaire */
+  if (isFalseInput()) {
+    document.querySelector("#thankMessage").style.display = "block";
+    document.querySelector(".close").style.display = "none";
+  } else {
+     displayErrorMessage(testAllInput());
   }
 }
-}/* displayErrorMessage(isInputValid(dataInput)) */
+);
+
