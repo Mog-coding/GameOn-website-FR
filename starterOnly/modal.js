@@ -40,7 +40,6 @@ const dataInput = {
     noeud: document.querySelector('#email'),
     errorMessage: "erreur syntaxe email",
     regex: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-    //regex validation mail RFC5322 format
   },
   birthDate: {
     noeud: document.querySelector('#birthdate'),
@@ -52,7 +51,7 @@ const dataInput = {
     errorMessage: "erreur nombre tournois",
     regex: /^([0-9]|[0-9][0-9])$/,
   },
-  radio: { 
+  radio: {
     noeud: document.querySelector('#location1'),
     errorMessage: "Veuillez sélectionner une ville",
     regex: "",
@@ -80,11 +79,11 @@ function displayErrorMessage(isInputValid) {
 /*********** test de validité des 7 entrées ************/
 /* test les regex des 5 premieres input */
 function validRegex(inputResult) {
-  for ( let i = 0; i < 5; i++ ){
-  let result = dataInput[inputProperties[i]]["noeud"].value.match(dataInput[inputProperties[i]]["regex"]);
-  inputResult.push(result);
+  for (let i = 0; i < 5; i++) {
+    let result = dataInput[inputProperties[i]]["noeud"].value.match(dataInput[inputProperties[i]]["regex"]);
+    inputResult.push(result);
   }
- return inputResult;
+  return inputResult;
 };
 
 /* test la validité d'input 6 radio */
@@ -109,7 +108,7 @@ function testCheckbox() {
 
 /* test la validité de TOUTES les inputs (appel les 3 fonctions au dessus), return array boolean*/
 function testAllInput() {
-  while(inputResult.length > 0) {
+  while (inputResult.length > 0) {
     inputResult.pop();
   };
   validRegex(inputResult);
@@ -118,33 +117,26 @@ function testAllInput() {
   return inputResult;
 }
 
-/* si une input === false, return false */
-function isFalseInput(){
-  return testAllInput().every( function(element){
-    if(Boolean(element) === false){
-      return false;
-    }else{
-      return true;
-    }
-  })
+function isTrue(element) {
+  return Boolean(element) === true;
 }
+
 
 /******** Appui bouton submit ******/
 document.querySelector('[name="reserve"]').addEventListener('submit', function (event) {
   event.preventDefault();
-  /* test toutes les 7 input du formulaire */
-  if (isFalseInput()) {
+  if (testAllInput().every(isTrue)) {
     document.querySelector("#thankMessage").style.display = "block";
     document.querySelector(".close").style.display = "none";
   } else {
-     displayErrorMessage(testAllInput());
+    displayErrorMessage(testAllInput());
   }
 }
 );
 
-  /********************** BOUTON FERMER ***********************/
-  document.querySelector("#fermer").addEventListener('click', function (event) {
-    event.preventDefault(); //supprime le comportement submit button de <form>
-    document.querySelector("#thankMessage").style.display = "none"; //Fait disparaitre le thank message
-    switchModal(false); //ferme le modal
-  });
+/********************** BOUTON FERMER ***********************/
+document.querySelector("#fermer").addEventListener('click', function (event) {
+  event.preventDefault(); //supprime le comportement submit button de <form>
+  document.querySelector("#thankMessage").style.display = "none"; //Fait disparaitre le thank message
+  switchModal(false); //ferme le modal
+});
