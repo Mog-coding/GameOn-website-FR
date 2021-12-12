@@ -38,17 +38,17 @@ const dataInput = {
   },
   email: {
     noeud: document.querySelector('#email'),
-    errorMessage: "erreur syntaxe email",
+    errorMessage: "Veuillez entrer une syntaxe d'email valide",
     regex: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
   },
   birthDate: {
     noeud: document.querySelector('#birthdate'),
-    errorMessage: "erreur date de naissance",
+    errorMessage: "Veuillez entrer une date de naissance valide de type: jj/mm/aaaa",
     regex: /^(19|20)\d\d[/-](0[1-9]|1[012])[/-](0[1-9]|[12][0-9]|3[01])$/,
   },
   nbTournoi: {
     noeud: document.querySelector('#quantity'),
-    errorMessage: "erreur nombre tournois",
+    errorMessage: "Veuillez entrer un nombre compris entre 0 et 99",
     regex: /^([0-9]|[0-9][0-9])$/,
   },
   radio: {
@@ -64,9 +64,9 @@ const dataInput = {
 }
 
 /* affichage/retrait message erreur en fonction d'un tableau avec validité des entrées */
-function displayErrorMessage(isInputValid) {
-  for (let i = 0; i < isInputValid.length; i++) {
-    if (Boolean(isInputValid[i]) === false) {
+function displayErrorMessage(testAllInput) {
+  for (let i = 0; i < testAllInput.length; i++) {
+    if (Boolean(testAllInput[i]) === false) {
       dataInput[inputProperties[i]]["noeud"].parentElement.setAttribute("data-error-visible", true);
       dataInput[inputProperties[i]]["noeud"].parentElement.setAttribute("data-error", dataInput[inputProperties[i]]["errorMessage"]);
     } else {
@@ -77,7 +77,7 @@ function displayErrorMessage(isInputValid) {
 }
 
 /*********** test de validité des 7 entrées ************/
-/* test les regex des 5 premieres input */
+/* test les regex des 5 premieres input: si regex match avec saisie = true */
 function validRegex(inputResult) {
   for (let i = 0; i < 5; i++) {
     let result = dataInput[inputProperties[i]]["noeud"].value.match(dataInput[inputProperties[i]]["regex"]);
@@ -87,7 +87,7 @@ function validRegex(inputResult) {
 };
 
 /* test la validité d'input 6 radio */
-function testRadio() {
+function checkRadio() {
   let radioResult = false;
   for (let i = 0; i < arrayRadio.length; i++) {
     if (arrayRadio[i].checked) {
@@ -96,8 +96,33 @@ function testRadio() {
   }
   return radioResult;
 }
+function testRadio2() {
+  let valueTournoi = dataInput.nbTournoi.noeud.value;
+  document.querySelector('#location1').removeAttribute("disabled");
+  if (Number(valueTournoi) === 0 && valueTournoi !== "") {
+    disableRadio();
+    return radioResult = true;
+  } else if (Number(valueTournoi) >= 1 && Number(valueTournoi) < 100) {
+    enableRadio()
+    return checkRadio();
+  };
+}
+const radioLocation = ['#location1', '#location2', '#location3', '#location4', '#location5', '#location6',];
+//saisie retourne du string
+function disableRadio() {
+  for (let i = 0; i < radioLocation.length; i++) {
+    document.querySelector(radioLocation[i]).checked = false;
+    document.querySelector(radioLocation[i]).setAttribute("disabled", "");
+  }
+}
+function enableRadio() {
+  for (let i = 0; i < radioLocation.length; i++) {
+    document.querySelector(radioLocation[i]).removeAttribute("disabled");
+  }
+}
 
-/* test la validité d'input 7 checkbox*/
+
+/* test la validité d'input 7 checkbox: conditions générales cochées = true*/
 function testCheckbox() {
   let result = false;
   if (dataInput.checkbox.noeud.checked) {
@@ -112,7 +137,7 @@ function testAllInput() {
     inputResult.pop();
   };
   validRegex(inputResult);
-  inputResult.push(testRadio(), testCheckbox());
+  inputResult.push(testRadio2(), testCheckbox());
   console.log(inputResult);
   return inputResult;
 }
@@ -126,6 +151,7 @@ function isTrue(element) {
 document.querySelector('[name="reserve"]').addEventListener('submit', function (event) {
   event.preventDefault();
   if (testAllInput().every(isTrue)) {
+    displayErrorMessage(testAllInput());
     document.querySelector("#thankMessage").style.display = "block";
     document.querySelector(".close").style.display = "none";
   } else {
@@ -140,3 +166,16 @@ document.querySelector("#fermer").addEventListener('click', function (event) {
   document.querySelector("#thankMessage").style.display = "none"; //Fait disparaitre le thank message
   switchModal(false); //ferme le modal
 });
+
+
+
+
+
+/********************** addEventListener sur input ***********************/
+function listen() {
+  for (let i = 0; i < inputProperties.length; i++) {
+    document.querySelector(inputProperties[i]).addEventListener('submit', function (event) {
+      displayErrorMessage(inputProperties);
+    });
+  }
+}
