@@ -1,30 +1,13 @@
-/********************** OUVERTURE FERMETURE MODAL **********************/
-/* Passe le modal en display: block; ou none; */
-function switchModal(truefalse) {
-  document.querySelector('.bground').style.display = blockNone(truefalse); /* = if problème */
-};
-/* Converti true en block et false en none */
-function blockNone(truefalse) {
-  if (truefalse) {  //open ? "block" : "none";
-    return "block"
-  } else {
-    return "none"
-  };
-};
-/* Clic les boutons d'inscription fait apparaitre/disparaitre le modal */
-document.querySelector('.btn-signup').addEventListener('click', function () {
-  switchModal(true);
-});
-document.querySelector('.close').addEventListener('click', function () {
-  switchModal(false);
-});
+/**
+ ********************* DECLARATIONS *********************
+ */
 
-/********************** INPUT **********************/
 const arrayRadio = document.querySelectorAll('[name="location"]'); //référence des 6 noeuds input radio
 const inputProperties = ['firstName', 'lastName', 'email', 'birthDate', 'nbTournoi', 'radio', 'checkbox',];
+const radioLocation = ['#location1', '#location2', '#location3', '#location4', '#location5', '#location6',];
 let inputResult = [];
 
-/* déclaration des objets */
+/* déclaration des caractéristiques des 7 input dans objets */
 const dataInput = {
   firstName: {
     noeud: document.querySelector('#first'),
@@ -63,20 +46,15 @@ const dataInput = {
   },
 }
 
-/* affichage/retrait message erreur en fonction d'un tableau avec validité des entrées */
-function displayErrorMessage(testAllInput) {
-  for (let i = 0; i < testAllInput.length; i++) {
-    if (Boolean(testAllInput[i]) === false) {
-      dataInput[inputProperties[i]]["noeud"].parentElement.setAttribute("data-error-visible", true);
-      dataInput[inputProperties[i]]["noeud"].parentElement.setAttribute("data-error", dataInput[inputProperties[i]]["errorMessage"]);
-    } else {
-      dataInput[inputProperties[i]]["noeud"].parentElement.removeAttribute("data-error-visible");
-      dataInput[inputProperties[i]]["noeud"].parentElement.removeAttribute("data-error");
-    }
-  }
+/**
+ ********************* FONCTION SECONDAIRES *********************
+ */
+
+/* transforme un élément en Boolean et vérifie si il est true */
+function isTrue(element) {
+  return Boolean(element) === true;
 }
 
-/*********** test de validité des 7 entrées ************/
 /* test les regex des 5 premieres input: si regex match avec saisie = true */
 function validRegex(inputResult) {
   for (let i = 0; i < 5; i++) {
@@ -85,6 +63,17 @@ function validRegex(inputResult) {
   }
   return inputResult;
 };
+
+/* test la validité d'input 7 checkbox: conditions générales cochées = true*/
+function testCheckbox() {
+  let result = false;
+  if (dataInput.checkbox.noeud.checked) {
+    result = true;
+  }
+  return result;
+}
+
+/*********** test de validité de radio ************/
 
 /* test la validité d'input 6 radio */
 function checkRadio() {
@@ -96,19 +85,8 @@ function checkRadio() {
   }
   return radioResult;
 }
-function testRadio2() {
-  let valueTournoi = dataInput.nbTournoi.noeud.value;
-  document.querySelector('#location1').removeAttribute("disabled");
-  if (Number(valueTournoi) === 0 && valueTournoi !== "") {
-    disableRadio();
-    return radioResult = true;
-  } else if (Number(valueTournoi) >= 1 && Number(valueTournoi) < 100) {
-    enableRadio()
-    return checkRadio();
-  };
-}
-const radioLocation = ['#location1', '#location2', '#location3', '#location4', '#location5', '#location6',];
-//saisie retourne du string
+
+//disable / enable radio dans le html
 function disableRadio() {
   for (let i = 0; i < radioLocation.length; i++) {
     document.querySelector(radioLocation[i]).checked = false;
@@ -121,61 +99,136 @@ function enableRadio() {
   }
 }
 
+// si saisie input radio = 0 ou "" => disable radio, sinon enable radio
+function testRadio() {
+  let valueTournoi = dataInput.nbTournoi.noeud.value;
+  document.querySelector('#location1').removeAttribute("disabled");
+  if (Number(valueTournoi) === 0 && valueTournoi !== "") {
+    disableRadio();
+    return radioResult = true;
+  } else if (Number(valueTournoi) >= 1 && Number(valueTournoi) < 100) {
+    enableRadio()
+    return checkRadio();
+  };
+}
+/* fin test de validité de radio */
 
-/* test la validité d'input 7 checkbox: conditions générales cochées = true*/
-function testCheckbox() {
-  let result = false;
-  if (dataInput.checkbox.noeud.checked) {
-    result = true;
+/**
+ ********************* FONCTION PRINCIPALES *********************
+ */
+
+/* affichage/retrait d'un message erreur en fonction du boolean de l'input et de son nom */
+function afficheErrorMessage(inputResult, inputProperties) {
+  if (Boolean(inputResult) === false) {
+    dataInput[inputProperties]["noeud"].parentElement.setAttribute("data-error-visible", true);
+    dataInput[inputProperties]["noeud"].parentElement.setAttribute("data-error", dataInput[inputProperties]["errorMessage"]);
+  } else {
+    dataInput[inputProperties]["noeud"].parentElement.removeAttribute("data-error-visible");
+    dataInput[inputProperties]["noeud"].parentElement.removeAttribute("data-error");
   }
-  return result;
 }
 
-/* test la validité de TOUTES les inputs (appel les 3 fonctions au dessus), return array boolean*/
+/* test la validité de TOUTES les inputs, return array inputResult boolean*/
 function testAllInput() {
   while (inputResult.length > 0) {
     inputResult.pop();
   };
   validRegex(inputResult);
-  inputResult.push(testRadio2(), testCheckbox());
-  console.log(inputResult);
+  inputResult.push(testRadio(), testCheckbox());
   return inputResult;
 }
 
-function isTrue(element) {
-  return Boolean(element) === true;
+/* affichage/retrait de tous les messages d'erreur en fonction d'un tableau de validité des l'input et d'un tableau de nom */
+function displayAllErrorMessage(testAllInput) {
+  for (let i = 0; i < testAllInput.length; i++) {
+    afficheErrorMessage(testAllInput[i], inputProperties[i]);
+  }
 }
 
+/**
+ ********************* OUVERTURE / FERMETURE MODAL *********************
+ */
 
-/******** Appui bouton submit ******/
+/* Passe le modal en display: block; ou none; */
+function switchModal(truefalse) {
+  document.querySelector('.bground').style.display = truefalse;
+};
+
+/* Clic sur bouton d'inscription fait apparaitre/disparaitre le modal */
+document.querySelector('.btn-signup').addEventListener('click', function () {
+  switchModal("block");
+});
+document.querySelector('.close').addEventListener('click', function () {
+  switchModal("none");
+});
+
+/**
+ ********************* SUBMIT FORMULAIRE *********************
+ */
+
+/* clic sur bouton submit soumet le formulaire, si valide => affiche message remerciement, sinon affiche les messages d'erreur */
 document.querySelector('[name="reserve"]').addEventListener('submit', function (event) {
   event.preventDefault();
   if (testAllInput().every(isTrue)) {
-    displayErrorMessage(testAllInput());
+    displayAllErrorMessage(testAllInput());
     document.querySelector("#thankMessage").style.display = "block";
     document.querySelector(".close").style.display = "none";
   } else {
-    displayErrorMessage(testAllInput());
+    displayAllErrorMessage(testAllInput());
   }
 }
 );
 
-/********************** BOUTON FERMER ***********************/
+/**
+ ********************* MESSAGE REMERCIEMENT bouton fermer *********************
+ */
+
+/* ferme le modal suite à appui sur le bouton fermer du message de remerciement */
 document.querySelector("#fermer").addEventListener('click', function (event) {
   event.preventDefault(); //supprime le comportement submit button de <form>
   document.querySelector("#thankMessage").style.display = "none"; //Fait disparaitre le thank message
   switchModal(false); //ferme le modal
 });
 
+/**
+ ********************* addEventListener sur 5 INPUT *********************
+ */
 
+dataInput[inputProperties[0]]["noeud"].addEventListener('change', function (event) {
+  testAllInput();
+  afficheErrorMessage(inputResult[0], inputProperties[0]);
+});
+dataInput[inputProperties[1]]["noeud"].addEventListener('change', function (event) {
+  testAllInput();
+  afficheErrorMessage(inputResult[1], inputProperties[1]);
+});
+dataInput[inputProperties[2]]["noeud"].addEventListener('change', function (event) {
+  testAllInput();
+  afficheErrorMessage(inputResult[2], inputProperties[2]);
+});
+dataInput[inputProperties[3]]["noeud"].addEventListener('change', function (event) {
+  testAllInput();
+  afficheErrorMessage(inputResult[3], inputProperties[3]);
+});
+dataInput[inputProperties[4]]["noeud"].addEventListener('change', function (event) {
+  testAllInput();
+  afficheErrorMessage(inputResult[4], inputProperties[4]);
+});
+dataInput[inputProperties[5]]["noeud"].addEventListener('change', function (event) {
+  testAllInput();
+  afficheErrorMessage(inputResult[5], inputProperties[5]);
+});
 
-
-
-/********************** addEventListener sur input ***********************/
-function listen() {
-  for (let i = 0; i < inputProperties.length; i++) {
-    document.querySelector(inputProperties[i]).addEventListener('submit', function (event) {
-      displayErrorMessage(inputProperties);
-    });
-  }
+/*
+//1) convertir le bloc au dessus avec la fonction en dessous
+function listenAll(){
+for ( let z = 0; z < inputProperties.length; z++){
+dataInput[inputProperties[z]]["noeud"].addEventListener('change', function (event) {
+  testAllInput();
+  afficheErrorMessage(inputResult[z], inputProperties[z]); //2) je n'arrive pas a envoyer [z] ici
+});
 }
+}
+
+listenAll(); 
+*/
