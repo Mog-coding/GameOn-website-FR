@@ -37,18 +37,21 @@ const dataInput = {
   radio: {
     noeud: document.querySelector('#location1'),
     errorMessage: "Veuillez sélectionner une ville",
-    regex: "",
   },
   checkbox: {
     noeud: document.querySelector('#checkbox1'),
     errorMessage: "Veuillez accepter les conditions générales pour continuer",
-    regex: "",
   },
 }
 
 /**
  ********************* FONCTION SECONDAIRES *********************
  */
+
+/* Passe le modal en display: block; ou none; */
+function switchModal(truefalse) {
+  document.querySelector('.bground').style.display = truefalse;
+}
 
 /* transforme un élément en Boolean et vérifie si il est true */
 function isTrue(element) {
@@ -62,7 +65,7 @@ function validRegex(inputResult) {
     inputResult.push(result);
   }
   return inputResult;
-};
+}
 
 /* test la validité d'input 7 checkbox: conditions générales cochées = true*/
 function testCheckbox() {
@@ -103,7 +106,7 @@ function enableRadio() {
 function testRadio() {
   let valueTournoi = dataInput.nbTournoi.noeud.value;
   document.querySelector('#location1').removeAttribute("disabled");
-  if (Number(valueTournoi) === 0 && valueTournoi !== "") {
+  if (valueTournoi === '0' || valueTournoi === '') {
     disableRadio();
     return radioResult = true;
   } else if (Number(valueTournoi) >= 1 && Number(valueTournoi) < 100) {
@@ -112,6 +115,16 @@ function testRadio() {
   };
 }
 /* fin test de validité de radio */
+
+/* responsive */
+function editNav() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
 
 /**
  ********************* FONCTION PRINCIPALES *********************
@@ -149,15 +162,14 @@ function displayAllErrorMessage(testAllInput) {
  ********************* OUVERTURE / FERMETURE MODAL *********************
  */
 
-/* Passe le modal en display: block; ou none; */
-function switchModal(truefalse) {
-  document.querySelector('.bground').style.display = truefalse;
-};
+/* Clic sur l'un des deux boutons d'inscription fait apparaitre le modal */
+document.querySelectorAll(".modal-btn").forEach(function (el) {
+  el.addEventListener('click', function () {
+    switchModal("block");
+  })
+})
 
-/* Clic sur bouton d'inscription fait apparaitre/disparaitre le modal */
-document.querySelector('.btn-signup').addEventListener('click', function () {
-  switchModal("block");
-});
+/*Clic sur croix, fait disparaitre le modal */
 document.querySelector('.close').addEventListener('click', function () {
   switchModal("none");
 });
@@ -171,8 +183,7 @@ document.querySelector('[name="reserve"]').addEventListener('submit', function (
   event.preventDefault();
   if (testAllInput().every(isTrue)) {
     displayAllErrorMessage(testAllInput());
-    document.querySelector("#thankMessage").style.display = "block";
-    document.querySelector(".close").style.display = "none";
+    document.querySelector("#thankMessage").classList.add('zIndex');
   } else {
     displayAllErrorMessage(testAllInput());
   }
@@ -186,8 +197,8 @@ document.querySelector('[name="reserve"]').addEventListener('submit', function (
 /* ferme le modal suite à appui sur le bouton fermer du message de remerciement */
 document.querySelector("#fermer").addEventListener('click', function (event) {
   event.preventDefault(); //supprime le comportement submit button de <form>
-  document.querySelector("#thankMessage").style.display = "none"; //Fait disparaitre le thank message
-  switchModal(false); //ferme le modal
+  document.querySelector("#thankMessage").classList.remove('zIndex'); //Fait disparaitre le thank message
+  switchModal("none"); //ferme le modal
 });
 
 /**
@@ -232,3 +243,5 @@ dataInput[inputProperties[z]]["noeud"].addEventListener('change', function (even
 
 listenAll(); 
 */
+
+

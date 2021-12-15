@@ -14,7 +14,7 @@
 	<!-- header -->
 	<div class="topnav" id="myTopnav">
 		<div class="header-logo">
-			<img alt="logo" src="Logo.png" width="auto" height="auto" />
+			<img alt="logo" src="Logo.png" />
 		</div>
 		<div class="main-navbar">
 			<a href="#" class="active"><span>Accueil</span></a>
@@ -26,7 +26,6 @@
 				<i class="fa fa-bars"></i>
 			</a>
 		</div>
-	</div>
 	</div>
 
 	<!-- main -->
@@ -50,7 +49,7 @@
 				<img src="./bg_img.jpg" alt="img" />
 			</div>
 			<!-- deuxiemme bouton inscription (mobile) -->
-			<button id="truc" class="btn-signup modal-btn">
+			<button class="btn-signup modal-btn">
 				je m'inscris
 			</button>
 		</div>
@@ -118,7 +117,7 @@
 						<!-- input checkbox1 et 2 -->
 						<div class="formData" id='ici'>
 							<input class="checkbox-input" type="checkbox" id="checkbox1" checked />
-							<label class="checkbox2-label" for="checkbox1" required>
+							<label class="checkbox2-label" for="checkbox1">
 								<span class="checkbox-icon"></span>
 								J'ai lu et accepté les conditions d'utilisation.
 							</label>
@@ -131,11 +130,12 @@
 							<br>
 						</div>
 						<!-- submit type="submit"-->
-						<input type="submit" class="btn-submit" class="button" value="C'est parti" />
+						<input type="submit" class="btn-submit button" value="C'est parti" />
 						<!-- message de validation -->
-						<div id="thankMessage" class="thankMess select-hide" >
-							<div> Merci, vos informations d'inscription ont été validées.</div>
-							<button id="fermer" class="button"> Fermer </button>
+						<div id="thankMessage" class="thankMess" >
+							<div id="centrer"></div>
+							<div id="thankText"> Merci, <br />vos informations d'inscription ont été validées.</div>
+							<div id="fermer" class="button"> Fermer </div>
 						</div>
 					</form>
 				</div>
