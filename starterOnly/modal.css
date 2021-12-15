@@ -46,14 +46,6 @@ p {
 .header-logo img {
   width: 260px;
 }
-/* ancien code
-.header-logo {
-  float: left;
-}
-.main-navbar {
-  float: right;
-}
-*/
 
 .topnav a {
   float: left;
@@ -94,6 +86,7 @@ main {
 
 /******************************/
 /***************  MODAL ***************/
+/******************************/
 
 .modal-btn {
   font-size: 145%;
@@ -496,6 +489,12 @@ footer {
 }
 
 /* RESPONSIVE */
+@media screen and (max-width: 1050px) {
+  .hero-headline {
+    font-size: 4.7rem;
+  }
+}
+
 @media screen and (max-width: 800px) {
   .hero-section {
     display: block;
