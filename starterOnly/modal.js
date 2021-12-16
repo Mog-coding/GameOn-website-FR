@@ -4,7 +4,6 @@
 
 const arrayRadio = document.querySelectorAll('[name="location"]'); //référence des 6 noeuds input radio
 const inputProperties = ['firstName', 'lastName', 'email', 'birthDate', 'nbTournoi', 'radio', 'checkbox',];
-const radioLocation = ['#location1', '#location2', '#location3', '#location4', '#location5', '#location6',];
 let inputResult = [];
 
 /* déclaration des caractéristiques des 7 input dans objets */
@@ -13,34 +12,41 @@ const dataInput = {
     noeud: document.querySelector('#first'),
     errorMessage: "Veuillez entrer entre 2 et 30 caractères dans le champ Prénom.",
     regex: /^[a-zA-Z]{2,30}$/,
+    isValid: false
   },
   lastName: {
     noeud: document.querySelector('#last'),
     errorMessage: "Veuillez entrer entre 2 et 30 caractères dans le champ Nom.",
     regex: /^[a-zA-Z]{2,30}$/,
+    isValid: false
   },
   email: {
     noeud: document.querySelector('#email'),
     errorMessage: "Veuillez entrer une syntaxe d'email valide",
     regex: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+    isValid: false
   },
   birthDate: {
     noeud: document.querySelector('#birthdate'),
     errorMessage: "Veuillez entrer une date de naissance valide de type: jj/mm/aaaa",
     regex: /^(19|20)\d\d[/-](0[1-9]|1[012])[/-](0[1-9]|[12][0-9]|3[01])$/,
+    isValid: false
   },
   nbTournoi: {
     noeud: document.querySelector('#quantity'),
     errorMessage: "Veuillez entrer un nombre compris entre 0 et 99",
     regex: /^([0-9]|[0-9][0-9])$/,
+    isValid: false
   },
   radio: {
     noeud: document.querySelector('#location1'),
     errorMessage: "Veuillez sélectionner une ville",
+    isValid: false
   },
   checkbox: {
     noeud: document.querySelector('#checkbox1'),
     errorMessage: "Veuillez accepter les conditions générales pour continuer",
+    isValid: false
   },
 }
 
@@ -49,13 +55,8 @@ const dataInput = {
  */
 
 /* Passe le modal en display: block; ou none; */
-function switchModal(truefalse) {
-  document.querySelector('.bground').style.display = truefalse;
-}
-
-/* transforme un élément en Boolean et vérifie si il est true */
-function isTrue(element) {
-  return Boolean(element) === true;
+function switchModal(display) {
+  document.querySelector('.bground').style.display = display;
 }
 
 /* test les regex des 5 premieres input: si regex match avec saisie = true */
@@ -79,7 +80,7 @@ function testCheckbox() {
 /*********** test de validité de radio ************/
 
 /* test la validité d'input 6 radio */
-function checkRadio() {
+function testRadio() {
   let radioResult = false;
   for (let i = 0; i < arrayRadio.length; i++) {
     if (arrayRadio[i].checked) {
@@ -88,33 +89,6 @@ function checkRadio() {
   }
   return radioResult;
 }
-
-//disable / enable radio dans le html
-function disableRadio() {
-  for (let i = 0; i < radioLocation.length; i++) {
-    document.querySelector(radioLocation[i]).checked = false;
-    document.querySelector(radioLocation[i]).setAttribute("disabled", "");
-  }
-}
-function enableRadio() {
-  for (let i = 0; i < radioLocation.length; i++) {
-    document.querySelector(radioLocation[i]).removeAttribute("disabled");
-  }
-}
-
-// si saisie input radio = 0 ou "" => disable radio, sinon enable radio
-function testRadio() {
-  let valueTournoi = dataInput.nbTournoi.noeud.value;
-  document.querySelector('#location1').removeAttribute("disabled");
-  if (valueTournoi === '0' || valueTournoi === '') {
-    disableRadio();
-    return radioResult = true;
-  } else if (Number(valueTournoi) >= 1 && Number(valueTournoi) < 100) {
-    enableRadio()
-    return checkRadio();
-  };
-}
-/* fin test de validité de radio */
 
 /* responsive */
 function editNav() {
@@ -181,7 +155,7 @@ document.querySelector('.close').addEventListener('click', function () {
 /* clic sur bouton submit soumet le formulaire, si valide => affiche message remerciement, sinon affiche les messages d'erreur */
 document.querySelector('[name="reserve"]').addEventListener('submit', function (event) {
   event.preventDefault();
-  if (testAllInput().every(isTrue)) {
+  if (testAllInput().every()) {
     displayAllErrorMessage(testAllInput());
     document.querySelector("#thankMessage").classList.add('zIndex');
   } else {
@@ -204,31 +178,6 @@ document.querySelector("#fermer").addEventListener('click', function (event) {
 /**
  ********************* addEventListener sur 5 INPUT *********************
  */
-
-dataInput[inputProperties[0]]["noeud"].addEventListener('change', function (event) {
-  testAllInput();
-  afficheErrorMessage(inputResult[0], inputProperties[0]);
-});
-dataInput[inputProperties[1]]["noeud"].addEventListener('change', function (event) {
-  testAllInput();
-  afficheErrorMessage(inputResult[1], inputProperties[1]);
-});
-dataInput[inputProperties[2]]["noeud"].addEventListener('change', function (event) {
-  testAllInput();
-  afficheErrorMessage(inputResult[2], inputProperties[2]);
-});
-dataInput[inputProperties[3]]["noeud"].addEventListener('change', function (event) {
-  testAllInput();
-  afficheErrorMessage(inputResult[3], inputProperties[3]);
-});
-dataInput[inputProperties[4]]["noeud"].addEventListener('change', function (event) {
-  testAllInput();
-  afficheErrorMessage(inputResult[4], inputProperties[4]);
-});
-dataInput[inputProperties[5]]["noeud"].addEventListener('change', function (event) {
-  testAllInput();
-  afficheErrorMessage(inputResult[5], inputProperties[5]);
-});
 
 /*
 //1) convertir le bloc au dessus avec la fonction en dessous
