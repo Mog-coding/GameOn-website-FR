@@ -3,7 +3,6 @@
  */
 
 const arrayRadio = document.querySelectorAll('[name="location"]'); //référence des 6 noeuds input radio
-const inputProperties = ['firstName', 'lastName', 'email', 'birthDate', 'nbTournoi', 'radio', 'checkbox',];
 let inputResult = [];
 
 /* déclaration des caractéristiques des 7 input dans objets */
@@ -50,36 +49,32 @@ const dataInput = {
   },
 }
 
-/**
- ********************* FONCTION SECONDAIRES *********************
- */
-
-/* Passe le modal en display: block; ou none; */
-function switchModal(display) {
-  document.querySelector('.bground').style.display = display;
-}
-
-/* test les regex des 5 premieres input: si regex match avec saisie = true */
-function validRegex(inputResult) {
-  for (let i = 0; i < 5; i++) {
-    let result = dataInput[inputProperties[i]]["noeud"].value.match(dataInput[inputProperties[i]]["regex"]);
-    inputResult.push(result);
+/* perso: affiche un tableau des key isValid */
+function testAllInput(){
+  while (inputResult.length > 0) {
+    inputResult.pop();
+  };
+  for (const key in dataInput) {
+    inputResult.push(dataInput[key].isValid);
   }
-  return inputResult;
+  console.log(inputResult);
 }
 
-/* test la validité d'input 7 checkbox: conditions générales cochées = true*/
-function testCheckbox() {
-  let result = false;
-  if (dataInput.checkbox.noeud.checked) {
-    result = true;
+/* test des entrées avec regex (5 premieres entrées)*/
+function testRegexInput(){
+  for (const key in dataInput) {
+    if (dataInput[key].regex) { //si il y a une regex
+      if(dataInput[key].noeud.value.match(dataInput[key].regex)){
+        dataInput[key].isValid = true;
+      }else{
+        dataInput[key].isValid = false;
+      }
+    }
   }
-  return result;
 }
-
-/*********** test de validité de radio ************/
 
 /* test la validité d'input 6 radio */
+/* si un radio result est vrai, radio result passe a true si false il ne se passe rien: détecte si au moins une radio est cochée */
 function testRadio() {
   let radioResult = false;
   for (let i = 0; i < arrayRadio.length; i++) {
@@ -87,50 +82,87 @@ function testRadio() {
       radioResult = true;
     }
   }
-  return radioResult;
+  dataInput.radio.isValid = radioResult;
 }
 
-/* responsive */
-function editNav() {
-  var x = document.getElementById("myTopnav");
-  if (x.className === "topnav") {
-    x.className += " responsive";
+/* test la validité d'input 7 checkbox: conditions générales cochées = true */
+function testCheckbox() {
+  let result = false;
+  if (dataInput.checkbox.noeud.checked) {
+    result = true;
+  }
+  dataInput.checkbox.isValid = result;
+}
+
+//affiche les messages
+function afficheErrorMessage(key) {
+  if (!key.isValid) {
+      key.noeud.parentElement.setAttribute("data-error-visible", true);
+      key.noeud.parentElement.setAttribute("data-error", key.errorMessage)
   } else {
-    x.className = "topnav";
+      key.noeud.parentElement.removeAttribute("data-error-visible");
+      key.noeud.parentElement.removeAttribute("data-error");
   }
 }
 
-/**
- ********************* FONCTION PRINCIPALES *********************
- */
+/* test les entrées et affiche les messages d'erreur */
+function afficher(){
+  testRegexInput();
+  testRadio();
+  testCheckbox();
+  for (const key in dataInput) {
+    console.log(dataInput[key]);
+    afficheErrorMessage(dataInput[key]);
+}
+}
 
-/* affichage/retrait d'un message erreur en fonction du boolean de l'input et de son nom */
-function afficheErrorMessage(inputResult, inputProperties) {
-  if (Boolean(inputResult) === false) {
-    dataInput[inputProperties]["noeud"].parentElement.setAttribute("data-error-visible", true);
-    dataInput[inputProperties]["noeud"].parentElement.setAttribute("data-error", dataInput[inputProperties]["errorMessage"]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+document.querySelector('[name="reserve"]').addEventListener('submit', function (event) {
+  event.preventDefault();
+  testRegexInput();
+  testRadio();
+  testCheckbox();
+  for (const key in dataInput) {
+    console.log(dataInput.key);
+    afficheErrorMessage(dataInput.key);
+  }
+}
+);
+
+/*
+ let isOK = true;
+  for (const key in dataInput) {
+      if (dataInput[key].regex) { //si il y a une regex 
+          isOK = false;
+          afficheErrorMessage(dataInput[key]);
+      }//else test input radio / coche
+  }
+/*
+  if (isOK) {
+      displayAllErrorMessage(testAllInput());
+      document.querySelector("#thankMessage").classList.add('zIndex');
   } else {
-    dataInput[inputProperties]["noeud"].parentElement.removeAttribute("data-error-visible");
-    dataInput[inputProperties]["noeud"].parentElement.removeAttribute("data-error");
+      displayAllErrorMessage(testAllInput());
   }
-}
+ */ 
 
-/* test la validité de TOUTES les inputs, return array inputResult boolean*/
-function testAllInput() {
-  while (inputResult.length > 0) {
-    inputResult.pop();
-  };
-  validRegex(inputResult);
-  inputResult.push(testRadio(), testCheckbox());
-  return inputResult;
-}
 
-/* affichage/retrait de tous les messages d'erreur en fonction d'un tableau de validité des l'input et d'un tableau de nom */
-function displayAllErrorMessage(testAllInput) {
-  for (let i = 0; i < testAllInput.length; i++) {
-    afficheErrorMessage(testAllInput[i], inputProperties[i]);
-  }
-}
+  
+
 
 /**
  ********************* OUVERTURE / FERMETURE MODAL *********************
@@ -147,6 +179,11 @@ document.querySelectorAll(".modal-btn").forEach(function (el) {
 document.querySelector('.close').addEventListener('click', function () {
   switchModal("none");
 });
+
+/* Passe le modal en display: block; ou none; */
+function switchModal(display) {
+  document.querySelector('.bground').style.display = display;
+}
 
 /**
  ********************* SUBMIT FORMULAIRE *********************
@@ -175,22 +212,7 @@ document.querySelector("#fermer").addEventListener('click', function (event) {
   switchModal("none"); //ferme le modal
 });
 
-/**
- ********************* addEventListener sur 5 INPUT *********************
- */
 
-/*
-//1) convertir le bloc au dessus avec la fonction en dessous
-function listenAll(){
-for ( let z = 0; z < inputProperties.length; z++){
-dataInput[inputProperties[z]]["noeud"].addEventListener('change', function (event) {
-  testAllInput();
-  afficheErrorMessage(inputResult[z], inputProperties[z]); //2) je n'arrive pas a envoyer [z] ici
-});
-}
-}
 
-listenAll(); 
-*/
 
 
