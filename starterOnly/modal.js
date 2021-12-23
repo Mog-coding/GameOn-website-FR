@@ -96,7 +96,6 @@ function testAllIsValid() {
       result = true;
     }
   }
-  console.log(result);
   return result;
 }
 
@@ -149,12 +148,12 @@ document.querySelector('[name="reserve"]').addEventListener('submit', function (
   if (testAllIsValid()) {
     for (const key in dataInput) {
       afficheErrorMessage(dataInput[key]);
+      };
       document.querySelector("#thankMessage").classList.add('zIndex');
-    }
   } else {
     for (const key in dataInput) {
       afficheErrorMessage(dataInput[key]);
-    }
+    };
   }
 }
 );
@@ -173,26 +172,31 @@ document.querySelector("#fermer").addEventListener('click', function (event) {
 /**
  ********************* change sur toutes les inputs *********************
  */
-
+//si regex, test regex et met a jour isValid, ensuite affiche message erreur
 for(const key in dataInput){
   dataInput[key].noeud.addEventListener('change', function (event) {
-  //si regex, test regex et met a jour isValid, ensuite affiche mess erreur
-    if(dataInput[key].regex){
+     if(dataInput[key].regex){
       dataInput[key].isValid = dataInput[key].noeud.value.match(dataInput[key].regex);
      }else{
-      console.log("no regex");
-     } 
+      console.log(key);
+       if (key === "radio"){
+        testRadio(); 
+       }else if(key === "checkbox"){
+        testCheckbox(); 
+       }
+       } 
      afficheErrorMessage(dataInput[key]);
   }
   );
 };
 
-
-
-
-
-
-
+/*
+arrayRadio.forEach(function(el){
+  el.addEventListener("change", function(){
+    console.log(this);
+  })
+})
+*/
 
 
 
