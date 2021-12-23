@@ -3,7 +3,6 @@
  */
 
 const arrayRadio = document.querySelectorAll('[name="location"]'); //référence des 6 noeuds input radio
-let inputResult = [];
 
 /* déclaration des caractéristiques des 7 input dans objets */
 const dataInput = {
@@ -13,7 +12,7 @@ const dataInput = {
     regex: /^[a-zA-Z]{2,30}$/,
     isValid: false
   },
-  lastName: {
+    lastName: {
     noeud: document.querySelector('#last'),
     errorMessage: "Veuillez entrer entre 2 et 30 caractères dans le champ Nom.",
     regex: /^[a-zA-Z]{2,30}$/,
@@ -49,32 +48,24 @@ const dataInput = {
   },
 }
 
-/* perso: affiche un tableau des key isValid */
-function testAllInput(){
-  while (inputResult.length > 0) {
-    inputResult.pop();
-  };
-  for (const key in dataInput) {
-    inputResult.push(dataInput[key].isValid);
-  }
-  console.log(inputResult);
-}
+/**
+ ********************* Fonctions de test *********************
+ */
 
-/* test des entrées avec regex (5 premieres entrées)*/
-function testRegexInput(){
+/* test des entrées avec regex: si match regex input isValid = true, sinon false (5 premieres entrées)*/
+function testRegexInput() {
   for (const key in dataInput) {
     if (dataInput[key].regex) { //si il y a une regex
-      if(dataInput[key].noeud.value.match(dataInput[key].regex)){
+      if (dataInput[key].noeud.value.match(dataInput[key].regex)) {
         dataInput[key].isValid = true;
-      }else{
+      } else {
         dataInput[key].isValid = false;
       }
     }
   }
 }
 
-/* test la validité d'input 6 radio */
-/* si un radio result est vrai, radio result passe a true si false il ne se passe rien: détecte si au moins une radio est cochée */
+/* test la validité d'input 6 radio: 1 radio cochée isValid = true sinon false */
 function testRadio() {
   let radioResult = false;
   for (let i = 0; i < arrayRadio.length; i++) {
@@ -85,7 +76,7 @@ function testRadio() {
   dataInput.radio.isValid = radioResult;
 }
 
-/* test la validité d'input 7 checkbox: conditions générales cochées = true */
+/* test la validité d'input 7 checkbox: conditions générales cochées isValid = true sinon false */
 function testCheckbox() {
   let result = false;
   if (dataInput.checkbox.noeud.checked) {
@@ -94,75 +85,35 @@ function testCheckbox() {
   dataInput.checkbox.isValid = result;
 }
 
-//affiche les messages
+// tests tous les isValid de l'objet dataInput, si une entrée false: renvoie false sinon true 
+function testAllIsValid() {
+  let result;
+  for (let key in dataInput) {
+    if (!dataInput[key].isValid) {
+      result = dataInput[key].isValid;
+      break;
+    } else {
+      result = true;
+    }
+  }
+  console.log(result);
+  return result;
+}
+
+/**
+ ********************* Fonction affichage erreur *********************
+ */
+
+//si isValid false: ajout attribut d'erreur, sinon supression attribut erreur
 function afficheErrorMessage(key) {
   if (!key.isValid) {
-      key.noeud.parentElement.setAttribute("data-error-visible", true);
-      key.noeud.parentElement.setAttribute("data-error", key.errorMessage)
+    key.noeud.parentElement.setAttribute("data-error-visible", true);
+    key.noeud.parentElement.setAttribute("data-error", key.errorMessage)
   } else {
-      key.noeud.parentElement.removeAttribute("data-error-visible");
-      key.noeud.parentElement.removeAttribute("data-error");
+    key.noeud.parentElement.removeAttribute("data-error-visible");
+    key.noeud.parentElement.removeAttribute("data-error");
   }
 }
-
-/* test les entrées et affiche les messages d'erreur */
-function afficher(){
-  testRegexInput();
-  testRadio();
-  testCheckbox();
-  for (const key in dataInput) {
-    console.log(dataInput[key]);
-    afficheErrorMessage(dataInput[key]);
-}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-document.querySelector('[name="reserve"]').addEventListener('submit', function (event) {
-  event.preventDefault();
-  testRegexInput();
-  testRadio();
-  testCheckbox();
-  for (const key in dataInput) {
-    console.log(dataInput.key);
-    afficheErrorMessage(dataInput.key);
-  }
-}
-);
-
-/*
- let isOK = true;
-  for (const key in dataInput) {
-      if (dataInput[key].regex) { //si il y a une regex 
-          isOK = false;
-          afficheErrorMessage(dataInput[key]);
-      }//else test input radio / coche
-  }
-/*
-  if (isOK) {
-      displayAllErrorMessage(testAllInput());
-      document.querySelector("#thankMessage").classList.add('zIndex');
-  } else {
-      displayAllErrorMessage(testAllInput());
-  }
- */ 
-
-
-  
-
 
 /**
  ********************* OUVERTURE / FERMETURE MODAL *********************
@@ -192,11 +143,18 @@ function switchModal(display) {
 /* clic sur bouton submit soumet le formulaire, si valide => affiche message remerciement, sinon affiche les messages d'erreur */
 document.querySelector('[name="reserve"]').addEventListener('submit', function (event) {
   event.preventDefault();
-  if (testAllInput().every()) {
-    displayAllErrorMessage(testAllInput());
-    document.querySelector("#thankMessage").classList.add('zIndex');
+  testRegexInput();
+  testRadio();
+  testCheckbox();
+  if (testAllIsValid()) {
+    for (const key in dataInput) {
+      afficheErrorMessage(dataInput[key]);
+      document.querySelector("#thankMessage").classList.add('zIndex');
+    }
   } else {
-    displayAllErrorMessage(testAllInput());
+    for (const key in dataInput) {
+      afficheErrorMessage(dataInput[key]);
+    }
   }
 }
 );
@@ -211,6 +169,30 @@ document.querySelector("#fermer").addEventListener('click', function (event) {
   document.querySelector("#thankMessage").classList.remove('zIndex'); //Fait disparaitre le thank message
   switchModal("none"); //ferme le modal
 });
+
+/**
+ ********************* change sur toutes les inputs *********************
+ */
+
+for(const key in dataInput){
+  dataInput[key].noeud.addEventListener('change', function (event) {
+  //si regex, test regex et met a jour isValid, ensuite affiche mess erreur
+    if(dataInput[key].regex){
+      dataInput[key].isValid = dataInput[key].noeud.value.match(dataInput[key].regex);
+     }else{
+      console.log("no regex");
+     } 
+     afficheErrorMessage(dataInput[key]);
+  }
+  );
+};
+
+
+
+
+
+
+
 
 
 
