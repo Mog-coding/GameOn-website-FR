@@ -151,7 +151,6 @@ document.querySelector('[name="reserve"]').addEventListener('submit', function (
     document.querySelector('[name="reserve"]').reset();
     document.querySelector("#thankMessage").classList.add('zIndex');
   } else {
-    event.preventDefault();
     for (const key in dataInput) {
       afficheErrorMessage(dataInput[key]);
     };
@@ -188,6 +187,7 @@ for (const key in dataInput) {
  ********************* responsive *********************
  */
 
+ // Ajoute et retire la classe responsive
 function editNav() {
   var x = document.getElementById("myTopnav");
   if (x.className === "topnav") {
