@@ -141,13 +141,16 @@ function switchModal(display) {
  ********************* SUBMIT FORMULAIRE *********************
  */
 
-// clic sur bouton submit soumet le formulaire, si valide => affiche message remerciement et efface les datas, sinon affiche les messages d'erreur
+// clic sur bouton submit soumet le formulaire, si valide => affiche message remerciement et reset formulaire, sinon affiche les messages d'erreur
 document.querySelector('[name="reserve"]').addEventListener('submit', function (event) {
   event.preventDefault();
   testRegexInput();
   testRadio();
   testCheckbox();
   if (testAllIsValid()) {
+    for (const key in dataInput) {
+      afficheErrorMessage(dataInput[key]);
+    };
     document.querySelector('[name="reserve"]').reset();
     document.querySelector("#thankMessage").classList.add('zIndex');
   } else {
