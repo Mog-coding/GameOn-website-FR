@@ -27,7 +27,7 @@ p {
 }
 
 .header-logo img {
-  padding-right: 1rem; /* changement 2 */
+  padding-right: 1rem; 
 }
 
 .topnav {
@@ -196,14 +196,6 @@ input {
 .formData[data-error-visible="true"] .text-control {
   border: 2px solid #e54858;
 }
-
-/*
-input[data-error]::after {
-    content: attr(data-error);
-    font-size: 0.4em;
-    color: red;
-}
-*/
 
 .checkbox-label,
 .checkbox2-label {
@@ -469,8 +461,8 @@ input[data-error]::after {
   font-weight: bolder;
 }
 
-/* second bouton signup */
-.hero-section > .btn-signup {
+/* bouton signup mobile */
+.hero-section > .btn-signup { 
   display: none;
 }
 
@@ -508,8 +500,15 @@ footer {
   .hero-content::after {
     content: unset;
   }
-  .hero-content .btn-signup {
+  /* signup desktop */
+  .hero-content .btn-signup { 
     display: none;
+  }
+  /* signup mobile */
+  .hero-section > .btn-signup { 
+    display: block;
+    margin: 32px auto 10px;
+    padding: 12px 35px;
   }
   .hero-headline {
     font-size: 4.5rem;
@@ -523,17 +522,12 @@ footer {
     border-radius: 10px;
     margin-top: 40px;
   }
-  .hero-section > .btn-signup {
-    display: block;
-    margin: 32px auto 10px;
-    padding: 12px 35px;
-  }
   .copyrights {
     margin-top: 50px;
     text-align: center;
   }
   .topnav {
-    padding: 40px 50px 40px 40px; /* changement 6 */
+    padding: 40px 50px 40px 40px; 
   }
   .topnav a {
     /* changement 3 */
@@ -563,7 +557,7 @@ footer {
     text-align: left;
   }
   main {
-    margin: 4px 30px 15px; /* changement */
+    margin: 4px 30px 15px; 
   }
   .header-logo img {
     margin-top: 10px;
@@ -594,7 +588,7 @@ footer {
 
 @media screen and (max-width: 450px) {
   .header-logo img {
-    padding-right: 0; /* changement 2 */
+    padding-right: 0;
   }
   .header-logo img {
     width: 165px;

@@ -2,9 +2,10 @@
  ********************* DECLARATIONS *********************
  */
 
-const arrayRadio = document.querySelectorAll('[name="location"]'); //référence des 6 noeuds input radio
+// Référence des 6 éléments input radio dans array
+const arrayRadio = document.querySelectorAll('[name="location"]');
 
-/* déclaration des caractéristiques des 7 input dans objets */
+// Déclaration des caractéristiques des 7 objets input dans objet dataInput
 const dataInput = {
   firstName: {
     noeud: document.querySelector('#first'),
@@ -12,7 +13,7 @@ const dataInput = {
     regex: /^[a-zA-Z]{2,30}$/,
     isValid: false
   },
-    lastName: {
+  lastName: {
     noeud: document.querySelector('#last'),
     errorMessage: "Veuillez entrer entre 2 et 30 caractères dans le champ Nom.",
     regex: /^[a-zA-Z]{2,30}$/,
@@ -49,13 +50,13 @@ const dataInput = {
 }
 
 /**
- ********************* Fonctions de test *********************
+ ********************* FONCTIONS DE TEST *********************
  */
 
-/* test des entrées avec regex: si match regex input isValid = true, sinon false (5 premieres entrées)*/
+// test des entrées avec regex: si il y a une regex et si input match regex -> isValid = true, sinon false (entrée 1 à 5)
 function testRegexInput() {
   for (const key in dataInput) {
-    if (dataInput[key].regex) { //si il y a une regex
+    if (dataInput[key].regex) { 
       if (dataInput[key].noeud.value.match(dataInput[key].regex)) {
         dataInput[key].isValid = true;
       } else {
@@ -65,18 +66,19 @@ function testRegexInput() {
   }
 }
 
-/* test la validité d'input 6 radio: 1 radio cochée isValid = true sinon false */
+// Test la validité d'input 6 radio: 1 radio cochée -> isValid = true sinon false
 function testRadio() {
   let radioResult = false;
   for (let i = 0; i < arrayRadio.length; i++) {
     if (arrayRadio[i].checked) {
       radioResult = true;
+      break;
     }
   }
   dataInput.radio.isValid = radioResult;
 }
 
-/* test la validité d'input 7 checkbox: conditions générales cochées isValid = true sinon false */
+// Test la validité d'input 7 checkbox: conditions générales cochées -> isValid = true sinon false 
 function testCheckbox() {
   let result = false;
   if (dataInput.checkbox.noeud.checked) {
@@ -85,7 +87,7 @@ function testCheckbox() {
   dataInput.checkbox.isValid = result;
 }
 
-// tests tous les isValid de l'objet dataInput, si une entrée false: renvoie false sinon true 
+// Test les clés isValid des 7 objets input, si au moins une entrée false: renvoie false sinon renvoie true 
 function testAllIsValid() {
   let result;
   for (let key in dataInput) {
@@ -103,7 +105,7 @@ function testAllIsValid() {
  ********************* Fonction affichage erreur *********************
  */
 
-//si isValid false: ajout attribut d'erreur, sinon supression attribut erreur
+// Si isValid false: ajout attributs d'erreur, sinon supression attributs erreur
 function afficheErrorMessage(key) {
   if (!key.isValid) {
     key.noeud.parentElement.setAttribute("data-error-visible", true);
@@ -118,19 +120,19 @@ function afficheErrorMessage(key) {
  ********************* OUVERTURE / FERMETURE MODAL *********************
  */
 
-/* Clic sur l'un des deux boutons d'inscription fait apparaitre le modal */
+// Clic sur l'un des deux boutons d'inscription -> fait apparaitre le modal
 document.querySelectorAll(".modal-btn").forEach(function (el) {
   el.addEventListener('click', function () {
     switchModal("block");
   })
 })
 
-/*Clic sur croix, fait disparaitre le modal */
+// Clic sur la croix modal -> le fait disparaitre 
 document.querySelector('.close').addEventListener('click', function () {
   switchModal("none");
 });
 
-/* Passe le modal en display: block; ou none; */
+// Passe le modal en display: block; ou none; 
 function switchModal(display) {
   document.querySelector('.bground').style.display = display;
 }
@@ -139,18 +141,17 @@ function switchModal(display) {
  ********************* SUBMIT FORMULAIRE *********************
  */
 
-/* clic sur bouton submit soumet le formulaire, si valide => affiche message remerciement, sinon affiche les messages d'erreur */
+// clic sur bouton submit soumet le formulaire, si valide => affiche message remerciement et efface les datas, sinon affiche les messages d'erreur
 document.querySelector('[name="reserve"]').addEventListener('submit', function (event) {
   event.preventDefault();
   testRegexInput();
   testRadio();
   testCheckbox();
   if (testAllIsValid()) {
-    for (const key in dataInput) {
-      afficheErrorMessage(dataInput[key]);
-      };
-      document.querySelector("#thankMessage").classList.add('zIndex');
+    document.querySelector('[name="reserve"]').reset();
+    document.querySelector("#thankMessage").classList.add('zIndex');
   } else {
+    event.preventDefault();
     for (const key in dataInput) {
       afficheErrorMessage(dataInput[key]);
     };
@@ -162,43 +163,36 @@ document.querySelector('[name="reserve"]').addEventListener('submit', function (
  ********************* MESSAGE REMERCIEMENT bouton fermer *********************
  */
 
-/* ferme le modal suite à appui sur le bouton fermer du message de remerciement */
+// ferme le modal suite à appui sur le bouton fermer du message de remerciement
 document.querySelector("#fermer").addEventListener('click', function (event) {
   event.preventDefault(); //supprime le comportement submit button de <form>
-  document.querySelector("#thankMessage").classList.remove('zIndex'); //Fait disparaitre le thank message
-  switchModal("none"); //ferme le modal
+  document.querySelector("#thankMessage").classList.remove('zIndex'); 
+  switchModal("none"); 
 });
 
 /**
- ********************* change sur toutes les inputs *********************
+ ********************* listener change sur 5 inputs *********************
  */
-//si regex, test regex et met a jour isValid, ensuite affiche message erreur
-for(const key in dataInput){
+
+// Si regex, test regex et met à jour isValid, ensuite affiche message erreur
+for (const key in dataInput) {
   dataInput[key].noeud.addEventListener('change', function (event) {
-     if(dataInput[key].regex){
+    if (dataInput[key].regex) {
       dataInput[key].isValid = dataInput[key].noeud.value.match(dataInput[key].regex);
-     }else{
-      console.log(key);
-       if (key === "radio"){
-        testRadio(); 
-       }else if(key === "checkbox"){
-        testCheckbox(); 
-       }
-       } 
-     afficheErrorMessage(dataInput[key]);
-  }
-  );
+    }
+    afficheErrorMessage(dataInput[key]);
+  });
 };
 
-/*
-arrayRadio.forEach(function(el){
-  el.addEventListener("change", function(){
-    console.log(this);
-  })
-})
-*/
+/**
+ ********************* responsive *********************
+ */
 
-
-
-
-
+function editNav() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+      x.className += " responsive";
+  } else {
+      x.className = "topnav";
+  }
+}
