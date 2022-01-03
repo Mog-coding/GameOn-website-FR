@@ -26,11 +26,11 @@ p {
 }
 
 .header-logo img {
-  padding-right: 1rem; 
+  padding-right: 1rem;
 }
 
 .topnav {
-  display: flex; /* changement 1 */
+  display: flex; 
   justify-content: space-between;
   overflow: hidden;
   padding: 34px;
@@ -401,7 +401,7 @@ input {
   color: #fff;
   position: relative;
   text-align: left;
-  min-width: 424px; /* changement */
+  min-width: 424px; 
 }
 
 .hero-content::after {
@@ -461,7 +461,7 @@ input {
 }
 
 /* bouton signup mobile */
-.hero-section > .btn-signup { 
+.hero-section > .btn-signup {
   display: none;
 }
 
@@ -500,11 +500,11 @@ footer {
     content: unset;
   }
   /* signup desktop */
-  .hero-content .btn-signup { 
+  .hero-content .btn-signup {
     display: none;
   }
   /* signup mobile */
-  .hero-section > .btn-signup { 
+  .hero-section > .btn-signup {
     display: block;
     margin: 32px auto 10px;
     padding: 12px 35px;
@@ -526,18 +526,16 @@ footer {
     text-align: center;
   }
   .topnav {
-    padding: 40px 50px 40px 40px; 
+    padding: 40px 50px 40px 40px;
   }
   .topnav a {
-    /* changement 3 */
-    display: none;
+     display: none;
   }
   .topnav a.icon {
-    /*float: right;*/
-    display: block;
+     display: block;
   }
   .topnav.responsive {
-    display: flex; /* changement 4  position: relative*/
+    display: flex; 
     position: relative;
   }
   .topnav.responsive .icon {
@@ -546,17 +544,15 @@ footer {
     top: 40px;
   }
   .topnav.responsive .main-navbar {
-    /* changement 5  position: relative*/
     display: flex;
     flex-wrap: wrap;
   }
   .topnav.responsive a {
-    /*float: none;*/
     display: block;
     text-align: left;
   }
   main {
-    margin: 4px 30px 15px; 
+    margin: 4px 30px 15px;
   }
   .header-logo img {
     margin-top: 10px;
@@ -569,7 +565,6 @@ footer {
 
 @media screen and (max-width: 600px) {
   .topnav.responsive .main-navbar {
-    /* changement 5  position: relative*/
     flex-direction: column;
     align-items: flex-end;
     text-align: center;

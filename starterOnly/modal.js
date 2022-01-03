@@ -56,7 +56,7 @@ const dataInput = {
 // test des entrées avec regex: si il y a une regex et si input match regex -> isValid = true, sinon false (entrée 1 à 5)
 function testRegexInput() {
   for (const key in dataInput) {
-    if (dataInput[key].regex) { 
+    if (dataInput[key].regex) {
       if (dataInput[key].noeud.value.match(dataInput[key].regex)) {
         dataInput[key].isValid = true;
       } else {
@@ -165,11 +165,11 @@ document.querySelector('[name="reserve"]').addEventListener('submit', function (
  ********************* MESSAGE REMERCIEMENT bouton fermer *********************
  */
 
-// ferme le modal suite à appui sur le bouton fermer du message de remerciement
+// Ferme le modal suite à appui sur le bouton fermer du message de remerciement
 document.querySelector("#fermer").addEventListener('click', function (event) {
   event.preventDefault(); //supprime le comportement submit button de <form>
-  document.querySelector("#thankMessage").classList.remove('zIndex'); 
-  switchModal("none"); 
+  document.querySelector("#thankMessage").classList.remove('zIndex');
+  switchModal("none");
 });
 
 /**
@@ -190,12 +190,12 @@ for (const key in dataInput) {
  ********************* responsive *********************
  */
 
- // Ajoute et retire la classe responsive
+// Ajoute et retire la classe responsive
 function editNav() {
   var x = document.getElementById("myTopnav");
   if (x.className === "topnav") {
-      x.className += " responsive";
+    x.className += " responsive";
   } else {
-      x.className = "topnav";
+    x.className = "topnav";
   }
 }
