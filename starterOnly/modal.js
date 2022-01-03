@@ -10,13 +10,13 @@ const dataInput = {
   firstName: {
     noeud: document.querySelector('#first'),
     errorMessage: "Veuillez entrer entre 2 et 30 caractères dans le champ Prénom.",
-    regex: /^[a-zA-Z]{2,30}$/,
+    regex: /^[a-zA-ZÀ-ÿ-]{2,30}$/,
     isValid: false
   },
   lastName: {
     noeud: document.querySelector('#last'),
     errorMessage: "Veuillez entrer entre 2 et 30 caractères dans le champ Nom.",
-    regex: /^[a-zA-Z]{2,30}$/,
+    regex: /^[a-zA-ZÀ-ÿ-]{2,30}$/,
     isValid: false
   },
   email: {
@@ -167,7 +167,7 @@ document.querySelector('[name="reserve"]').addEventListener('submit', function (
 
 // Ferme le modal suite à appui sur le bouton fermer du message de remerciement
 document.querySelector("#fermer").addEventListener('click', function (event) {
-  event.preventDefault(); 
+  event.preventDefault();
   document.querySelector("#thankMessage").classList.remove('zIndex');
   switchModal("none");
 });
