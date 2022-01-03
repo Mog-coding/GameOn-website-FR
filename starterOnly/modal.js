@@ -181,8 +181,8 @@ for (const key in dataInput) {
   dataInput[key].noeud.addEventListener('change', function (event) {
     if (dataInput[key].regex) {
       dataInput[key].isValid = dataInput[key].noeud.value.match(dataInput[key].regex);
+      afficheErrorMessage(dataInput[key]);
     }
-    afficheErrorMessage(dataInput[key]);
   });
 };
 
