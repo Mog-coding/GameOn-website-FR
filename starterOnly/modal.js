@@ -47,7 +47,7 @@ const dataInput = {
     errorMessage: "Veuillez accepter les conditions générales pour continuer",
     isValid: false
   },
-}
+};
 
 /**
  ********************* FONCTIONS DE TEST *********************
@@ -125,7 +125,7 @@ document.querySelectorAll(".modal-btn").forEach(function (el) {
   el.addEventListener('click', function () {
     switchModal("block");
   })
-})
+});
 
 // Clic sur la croix modal -> le fait disparaitre 
 document.querySelector('.close').addEventListener('click', function () {
@@ -167,7 +167,7 @@ document.querySelector('[name="reserve"]').addEventListener('submit', function (
 
 // Ferme le modal suite à appui sur le bouton fermer du message de remerciement
 document.querySelector("#fermer").addEventListener('click', function (event) {
-  event.preventDefault(); //supprime le comportement submit button de <form>
+  event.preventDefault(); 
   document.querySelector("#thankMessage").classList.remove('zIndex');
   switchModal("none");
 });
